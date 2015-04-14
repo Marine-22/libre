@@ -118,6 +118,7 @@
     <version name="version" access="property" type="long" />
 
     <property name="code" access="property" not-null="true" unique="true"/>
+    <property name="note" access="property" not-null="false" unique="false"/>
 
     <property name="effort" access="field" column="effort" type="org.libreplan.business.workingday.hibernate.EffortDurationType" />
     <property name="date" access="field"/>

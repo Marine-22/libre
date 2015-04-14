@@ -842,6 +842,16 @@ public class Util {
 
         return buttons;
     }
+    
+    public static Button appendRemoveOperationsAndOnClickEvent(Row row, EventListener removeButtonListener) {
+        Hbox hbox = new Hbox();
+        Button button = Util.createRemoveButton(removeButtonListener);
+
+        hbox.appendChild(button);
+
+        row.appendChild(hbox);
+        return button;
+    }
 
     /**
      * Checks if the <code>entity</code> is contained in the provided

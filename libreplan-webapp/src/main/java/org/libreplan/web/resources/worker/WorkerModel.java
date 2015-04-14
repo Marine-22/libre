@@ -45,6 +45,7 @@ import org.libreplan.business.common.entities.Configuration;
 import org.libreplan.business.common.entities.EntityNameEnum;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
 import org.libreplan.business.common.exceptions.ValidationException;
+import org.libreplan.business.costcategories.entities.TypeOfWorkHours;
 import org.libreplan.business.planner.daos.IDayAssignmentDAO;
 import org.libreplan.business.planner.daos.IResourceAllocationDAO;
 import org.libreplan.business.resources.daos.ICriterionDAO;
@@ -150,6 +151,7 @@ public class WorkerModel extends IntegrationEntityModel implements IWorkerModel 
     public void save() throws ValidationException {
         removeCalendarIfNeeded();
         resetRoleInOriginalBoundUser();
+        LOG.info("Ukladam entitu worker: " + worker.getTypeOfWorkHours());
         resourceDAO.save(worker);
         if (worker.getCalendar() != null) {
             baseCalendarModel.checkInvalidValuesCalendar(worker.getCalendar());
@@ -697,4 +699,10 @@ public class WorkerModel extends IntegrationEntityModel implements IWorkerModel 
         return null;
     }
 
+    @Override
+    public void initTypeOfHours() {
+    	if(worker.getTypeOfWorkHours() == null){
+    		worker.setTypeOfWorkHours(TypeOfWorkHours.create(null, "Worker hour price"));
+    	}
+    }
 }

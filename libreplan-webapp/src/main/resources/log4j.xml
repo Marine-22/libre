@@ -10,7 +10,7 @@
   </appender>
 
   <appender name="rolling" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${libreplan-log-directory}libreplan.log" />
+    <param name="file" value="C:\\logs\\libreplan.log" />
     <param name="datePattern" value="'.'yyyy-MM-dd" /> <!-- Rollover each midnight -->
 
     <layout class="org.apache.log4j.PatternLayout">
@@ -19,7 +19,7 @@
   </appender>
 
   <appender name="rolling-errors" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${libreplan-log-directory}libreplan-error.log" />
+    <param name="file" value="C:\\logs\\libreplan-error.log" />
     <param name="datePattern" value="'.'yyyy-MM-dd" /> <!-- Rollover each midnight -->
 
     <layout class="org.apache.log4j.PatternLayout">
@@ -32,7 +32,7 @@
   </appender>
 
   <appender name="rolling-profiling" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${libreplan-log-directory}libreplan-profile.log" />
+    <param name="file" value="C:\\logs\\libreplan-profile.log" />
     <param name="datePattern" value="'.'yyyy-MM-dd" /> <!-- Rollover each midnight -->
 
     <layout class="org.apache.log4j.PatternLayout">
@@ -63,7 +63,7 @@
    </logger>
 
   <appender name="logins" class="org.apache.log4j.DailyRollingFileAppender">
-    <param name="file" value="${libreplan-log-directory}libreplan-logins.log" />
+    <param name="file" value="C:\\logs\\libreplan-logins.log" />
     <param name="datePattern" value="'.'yyyy-MM-dd" /> <!-- Rollover each midnight -->
 
     <layout class="org.apache.log4j.PatternLayout">
@@ -83,7 +83,7 @@
   </logger>
 
   <appender name="second-level-cache-file" class="org.apache.log4j.RollingFileAppender">
-      <param name="file" value="${libreplan-log-directory}libreplan-second-level-cache.log" />
+      <param name="file" value="C:\\logs\\libreplan-second-level-cache.log" />
       <param name="MaxFileSize" value="5000KB"/>
       <param name="MaxBackupIndex" value="4"/>
       <layout class="org.apache.log4j.PatternLayout">

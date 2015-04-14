@@ -160,7 +160,7 @@ public class TypeOfWorkHours extends IntegrationEntity implements IHumanIdentifi
     }
 
     public String toString() {
-        return name;
+        return name + " -> " + defaultPrice;
     }
 
     @Override
@@ -183,5 +183,4 @@ public class TypeOfWorkHours extends IntegrationEntity implements IHumanIdentifi
 
         return true;
     }
-
 }

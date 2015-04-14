@@ -23,11 +23,17 @@ package org.libreplan.business.resources.entities;
 
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.LogFactory;
+
 import javax.validation.constraints.AssertTrue;
+
 import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.validation.Valid;
+
 import org.libreplan.business.common.Registry;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
+import org.libreplan.business.costcategories.entities.TypeOfWorkHours;
 import org.libreplan.business.users.daos.IUserDAO;
 import org.libreplan.business.users.entities.User;
 import org.libreplan.business.users.entities.UserRole;
@@ -43,6 +49,9 @@ import org.libreplan.business.users.entities.UserRole;
  */
 public class Worker extends Resource {
 
+	@SuppressWarnings("unused")
+    private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(Worker.class);
+    
     public static Worker create() {
         return create(new Worker());
     }
@@ -96,6 +105,8 @@ public class Worker extends Resource {
     private String nif;
 
     private User user;
+    
+    private TypeOfWorkHours typeOfWorkHours;
 
     /**
      * Constructor for hibernate. Do not use!
@@ -276,4 +287,13 @@ public class Worker extends Resource {
         return user.getRoles().contains(UserRole.ROLE_BOUND_USER);
     }
 
+	public TypeOfWorkHours getTypeOfWorkHours() {
+		return typeOfWorkHours;
+	}
+
+	public void setTypeOfWorkHours(TypeOfWorkHours typeOfWorkHours) {
+		this.typeOfWorkHours = typeOfWorkHours;
+	}
+
+    
 }

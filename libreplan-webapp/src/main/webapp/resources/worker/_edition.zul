@@ -33,7 +33,7 @@
             <tab visible="false" label="${i18n:_('Locations')}"></tab>
             <tab visible="false" label="${i18n:_('Work record')}"></tab>
             <tab label="${i18n:_('Calendar')}"></tab>
-            <tab id="costCategoryAssignmentTab" label="${i18n:_('Cost category assignment')}"></tab>
+        	<tab visible="false" id="costCategoryAssignmentTab" label="${i18n:_('Cost category assignment')}"></tab>
         </tabs>
         <tabpanels>
             <tabpanel id="personalDataTabpanel">
@@ -92,6 +92,14 @@
                                 <label value="${i18n:_('Observations')}" />
                                 <textbox value="@{controller.virtualWorkerObservations}" width="500px" multiline="true" />
                             </row>
+                            <row>
+                                <label value="${i18n:_('Hour costs')}" />
+                                <decimalbox id="defaultPrice"
+                                    constraint="no empty:${i18n:_('cannot be empty')}"
+                                    value="@{controller.worker.typeOfWorkHours.defaultPrice}"
+                                    format="@{controller.moneyFormat}" />
+                            </row>
+                            
                         </rows>
                     </grid>
                 </groupbox>

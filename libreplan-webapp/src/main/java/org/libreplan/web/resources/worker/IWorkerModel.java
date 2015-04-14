@@ -147,4 +147,6 @@ public interface IWorkerModel extends IIntegrationEntityModel {
 
     User getBoundUserFromDB(Worker worker);
 
+	void initTypeOfHours();
+
 }

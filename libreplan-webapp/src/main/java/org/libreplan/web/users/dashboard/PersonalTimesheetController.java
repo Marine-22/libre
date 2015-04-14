@@ -32,7 +32,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.LogFactory;
+import org.jfree.util.Log;
 import org.joda.time.LocalDate;
+import org.libreplan.business.common.exceptions.InstanceNotFoundException;
 import org.libreplan.business.orders.entities.OrderElement;
 import org.libreplan.business.users.entities.UserRole;
 import org.libreplan.business.workingday.EffortDuration;
@@ -66,6 +69,7 @@ import org.zkoss.zul.Columns;
 import org.zkoss.zul.Frozen;
 import org.zkoss.zul.Image;
 import org.zkoss.zul.Label;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Row;
 import org.zkoss.zul.RowRenderer;
 import org.zkoss.zul.Textbox;
@@ -81,6 +85,9 @@ import org.zkoss.zul.api.Popup;
 @SuppressWarnings("serial")
 public class PersonalTimesheetController extends GenericForwardComposer
         implements IPersonalTimesheetController {
+
+	   private static final org.apache.commons.logging.Log LOG = LogFactory
+	            .getLog(PersonalTimesheetController.class);
 
     private final static String EFFORT_DURATION_TEXTBOX_WIDTH = "30px";
     private final static String TOTAL_DURATION_TEXTBOX_WIDTH = "50px";
@@ -125,11 +132,45 @@ public class PersonalTimesheetController extends GenericForwardComposer
 
     private Div personalTimesheetPopupEffort;
 
-    private Div personalTimesheetPopupFinished;
+    private Div personalTimesheetPopupNote;
+
+    //private Div personalTimesheetPopupFinished;
 
     @Resource
     private IPersonalTimesheetController personalTimesheetController;
 
+    private boolean delete(OrderElement entity){
+    	return personalTimesheetModel.removeOrderElement(entity);
+    }
+    
+    private final void confirmDelete(OrderElement entity) {
+        try {
+            if (Messagebox.show(
+                    _("Delete task \"{0}\". Are you sure?", entity.getName()),
+                    _("Confirm"), Messagebox.OK | Messagebox.CANCEL,
+                    Messagebox.QUESTION) == Messagebox.OK) {
+                if(delete(entity)){
+	                messagesForUser.showMessage(
+	                        Level.INFO,
+	                        _("task \"{0}\" deleted", entity.getName()));
+	                Util.reloadBindings(timesheet);
+                }
+                else{
+                	messagesForUser.showMessage(
+	                        Level.INFO,
+	                        _("task \"{0}\" was not deleted. Something went wrong.", entity.getName()));
+                }
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } 
+//        catch (InstanceNotFoundException ie) {
+//            messagesForUser.showMessage(
+//                    Level.ERROR,
+//                    _("task \"{1}\" could not be deleted, it was already removed", entity.getName()));
+//        }
+    }
+    
     private RowRenderer rowRenderer = new RowRenderer() {
 
         private LocalDate first;
@@ -172,10 +213,19 @@ public class PersonalTimesheetController extends GenericForwardComposer
             first = personalTimesheetModel.getFirstDay();
             last = personalTimesheetModel.getLastDate();
         }
+        
 
-        private void renderOrderElementRow(Row row, OrderElement orderElement) {
-            Util.appendLabel(row, personalTimesheetModel.getOrder(orderElement)
-                    .getName());
+
+        private void renderOrderElementRow(Row row, final OrderElement orderElement) {
+            Util.appendRemoveOperationsAndOnClickEvent(row,
+                   new EventListener() {
+                @Override
+                public void onEvent(Event event) throws Exception {
+                    confirmDelete(orderElement);
+                }
+            });
+            
+            Util.appendLabel(row, personalTimesheetModel.getOrder(orderElement).getName());
             Util.appendLabel(row, orderElement.getName());
 
             appendInputsForDays(row, orderElement);
@@ -226,7 +276,6 @@ public class PersonalTimesheetController extends GenericForwardComposer
                         updateTotalExtraColumn();
                         updateSummary();
                     }
-
                 });
 
                 EventListener openPersonalTimesheetPopup = new EventListener() {
@@ -237,13 +286,10 @@ public class PersonalTimesheetController extends GenericForwardComposer
                     }
 
                 };
-                textbox.addEventListener(Events.ON_DOUBLE_CLICK,
-                        openPersonalTimesheetPopup);
-                textbox.addEventListener(Events.ON_OK,
-                        openPersonalTimesheetPopup);
+                textbox.addEventListener(Events.ON_DOUBLE_CLICK, openPersonalTimesheetPopup);
+                textbox.addEventListener(Events.ON_OK, openPersonalTimesheetPopup);
 
-                if (personalTimesheetModel
-                        .wasModified(orderElement, textboxDate)) {
+                if (personalTimesheetModel.wasModified(orderElement, textboxDate)) {
                     markAsModified(textbox);
                 }
 
@@ -293,8 +339,31 @@ public class PersonalTimesheetController extends GenericForwardComposer
             });
             addOnOkEventToClosePopup(effortTextbox);
             personalTimesheetPopupEffort.appendChild(effortTextbox);
-
+            
+            
+            personalTimesheetPopupNote.getChildren().clear();
+            final Textbox noteTextbox = Util.bind(new Textbox(),
+                    new Util.Getter<String>() {
+                @Override
+                public String get() {
+                	LOG.info("Volam personalTimesheetPopupNote.get()");
+                    String noteText = personalTimesheetModel
+                            .getNoteText(orderElement, textboxDate);
+                    return noteText;
+                }
+            }, new Util.Setter<String>() {
+                @Override
+                public void set(String value) {
+                	LOG.info("Volam personalTimesheetPopupNote.set()");
+                	personalTimesheetModel.setNoteText(orderElement,
+                            textboxDate, value);
+                }
+            });
+            addOnOkEventToClosePopup(noteTextbox);
+            personalTimesheetPopupNote.appendChild(noteTextbox);
+            /*
             personalTimesheetPopupFinished.getChildren().clear();
+            
             Checkbox finishedCheckbox = Util.bind(new Checkbox(),
                     new Util.Getter<Boolean>() {
                         @Override
@@ -316,7 +385,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
             }
             addOnOkEventToClosePopup(finishedCheckbox);
             personalTimesheetPopupFinished.appendChild(finishedCheckbox);
-
+*/
             return effortTextbox;
         }
 
@@ -357,6 +426,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
         }
 
         private void renderTotalRow(Row row) {
+        	Util.appendLabel(row, "");
             appendLabelSpaningTwoColumns(row, _("Total"));
             appendTotalForDays(row);
             row.setSclass("total-row");
@@ -446,6 +516,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
         }
 
         private void renderCapacityRow(Row row) {
+        	Util.appendLabel(row, "");
             appendLabelSpaningTwoColumns(row, _("Capacity"));
             appendCapcityForDaysAndTotal(row);
         }
@@ -477,6 +548,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
         }
 
         private void renderExtraRow(Row row) {
+        	Util.appendLabel(row, "");
             appendLabelSpaningTwoColumns(row, _("Extra"));
             appendExtraForDays(row);
             appendTotalExtra(row);
@@ -644,7 +716,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
         createColumns(date);
 
         Frozen frozen = new Frozen();
-        frozen.setColumns(2);
+        frozen.setColumns(3);
         timesheet.appendChild(frozen);
 
         adjustFrozenWidth();
@@ -660,13 +732,17 @@ public class PersonalTimesheetController extends GenericForwardComposer
     }
 
     private void createProjectAndTaskColumns() {
-        Column project = new Column(_("Project"));
+    	Column del = new Column(_(""));
+    	del.setStyle("min-width:25px");
+        
+    	Column project = new Column(_("Project"));
         project.setStyle("min-width:100px");
         columns.appendChild(project);
 
         Column task = new Column(_("Task"));
         task.setStyle("min-width:100px");
 
+        columns.appendChild(del);
         columns.appendChild(project);
         columns.appendChild(task);
     }

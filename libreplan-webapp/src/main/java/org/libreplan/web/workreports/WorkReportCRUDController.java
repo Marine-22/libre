@@ -64,6 +64,7 @@ import org.libreplan.web.common.components.bandboxsearch.BandboxSearch;
 import org.libreplan.web.common.entrypoints.EntryPointsHandler;
 import org.libreplan.web.common.entrypoints.IURLHandlerRegistry;
 import org.libreplan.web.users.dashboard.IPersonalTimesheetController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.zkoss.ganttz.IPredicate;
 import org.zkoss.ganttz.util.ComponentsFinder;
 import org.zkoss.zk.ui.Component;

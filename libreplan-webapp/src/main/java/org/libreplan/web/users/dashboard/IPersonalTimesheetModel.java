@@ -250,4 +250,10 @@ public interface IPersonalTimesheetModel {
      */
     Boolean isFinished(OrderElement orderElement);
 
+	boolean removeOrderElement(OrderElement entity);
+
+	String getNoteText(OrderElement orderElement, LocalDate textboxDate);
+
+	void setNoteText(OrderElement orderElement, LocalDate textboxDate, String value);
+
 }

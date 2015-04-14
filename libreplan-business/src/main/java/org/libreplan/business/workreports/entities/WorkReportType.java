@@ -538,5 +538,9 @@ public class WorkReportType extends IntegrationEntity implements IHumanIdentifia
         }
         return name.equals(PredefinedWorkReportTypes.JIRA_TIMESHEETS.getName());
     }
+    
+    public String toString(){
+    	return "WorkReportType[name="+name+"; dateIsShared="+dateIsSharedByLines+"; workReportLabelTypeAssigments="+workReportLabelTypeAssigments+"; headingFields="+headingFields+"; lineFields="+lineFields+"]";
+    }
 
 }

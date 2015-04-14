@@ -44,5 +44,21 @@
             baseTableName="configuration" baseColumnNames="automatic_budget_type_of_work_hours"
             referencedTableName="type_of_work_hours" referencedColumnNames="id" />
     </changeSet>
+    
+    <changeSet id="add-new-column-code-to-work-report-line" author="fmorvay">
+        <comment>Add new column code in table work_report_line</comment>
+        <addColumn tableName="work_report_line">
+            <column name="note" type="VARCHAR(255)" />
+        </addColumn>
+    </changeSet>
+    
+       <changeSet id="add-new-column-type_work_hours_id-to-worker" author="fmorvay">
+        <comment>Add new column type_work_hours_id in table worker</comment>
+        <addColumn tableName="worker">
+            <column name="type_work_hours_id" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

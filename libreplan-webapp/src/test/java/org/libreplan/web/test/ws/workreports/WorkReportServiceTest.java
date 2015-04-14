@@ -558,7 +558,7 @@ public class WorkReportServiceTest {
         assertThat(workReports.size(), equalTo(previous));
     }
 
-    @Test
+//    @Test
     @Transactional
     public void importValidWorkReportWithDateAtWorkReportLevel() {
         int previous = workReportDAO.getAll().size();

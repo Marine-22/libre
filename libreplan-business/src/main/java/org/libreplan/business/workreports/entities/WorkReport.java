@@ -564,5 +564,32 @@ public class WorkReport extends IntegrationEntity implements
         }
         return false;
     }
+    
+    
+    public String toString(){
+    	
+    	return  "date = " + date + 
+    			"\nworkReportType = " + workReportType + 
+    			//"\nresource = " + resource + 
+    			"\norderElement = " + orderElement + 
+    			"\nlabels = " + labels + 
+    			"\nworkReportLines" + workReportLines + 
+    			"\ndescriptionValues = " + descriptionValues + 
+    			"\nlastWorkReportLineSequenceCode = " + lastWorkReportLineSequenceCode;
+    }
+
+	public void clearOrderElement(OrderElement entity) {
+		if(workReportLines != null){
+			Set<WorkReportLine> toDel = new HashSet<WorkReportLine>();
+			for(WorkReportLine wrl : workReportLines){
+				// TODO toto treba checknut
+				if(wrl.getOrderElement().equals(entity)){
+					toDel.add(wrl);
+				}
+			}
+			workReportLines.removeAll(toDel);
+		}
+		
+	}
 
 }

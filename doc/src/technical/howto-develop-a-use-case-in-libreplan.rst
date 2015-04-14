@@ -390,8 +390,6 @@ Then you will have the following files:
 
  package org.libreplan.business.planner.daos;
 
- ...
-
  /**
   * DAO interface for {@link StretchesFunctionTemplate}
   *
@@ -754,7 +752,7 @@ controller. For example with the following lines::
     <button onClick="controller.goToEditForm()" />
 
 As you can see in last example, when an event is launched is not needed to use
-data binding.
+data binding.   
 
 ``BaseCRUDController`` is a generic class with common behaviour for controllers
 of CRUD screens. It defines a set of methods with a common functionality and

@@ -218,7 +218,7 @@
     </profiles>
 
     <build>
-        <finalName>libreplan-webapp</finalName>
+        <finalName>libreplan</finalName>
 
         <pluginManagement>
             <plugins>
@@ -473,5 +473,16 @@
            <groupId>org.quartz-scheduler</groupId>
            <artifactId>quartz</artifactId>
         </dependency>
+        <!-- Apache POI excel manipulation -->
+        <dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.11</version>
+		</dependency>
    </dependencies>
 </project>

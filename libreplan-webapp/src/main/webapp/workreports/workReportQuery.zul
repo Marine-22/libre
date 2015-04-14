@@ -60,7 +60,7 @@
                 </hbox>
 
                 <!-- More options -->
-                <groupbox sclass="filter-more-options" mold="3d"  width="120px" open="false"
+                <groupbox visible="false" sclass="filter-more-options" mold="3d"  width="120px" open="false"
                     contentStyle="border: 1px solid #B2CCD9;">
                         <caption label="${i18n:_('More options')}" />
 
@@ -82,6 +82,8 @@
 
                 <button label="${i18n:_('Filter')}"
                     onClick="controller.onApplyFilterWorkReportLines(event)"/>
+				<button label="${i18n:_('Create Excel')}"
+                    onClick="controller.getTimesheetExcel()"/>
             </hbox>
         </div>
         </groupbox>
@@ -107,15 +109,15 @@
                     sort="auto(orderElement.code)" sortDirection="ascending"/>
                 <column id="taskName" label="${i18n:_('Task name')}" align="center"
                     sort="auto(orderElement.name)" sortDirection="ascending"/>
-                <column id="startHour" label="${i18n:_('Start hour')}" align="center"
+                <column visible="false" id="startHour" label="${i18n:_('Start hour')}" align="center"
                     sort="auto(clockStart)" sortDirection="ascending"/>
-                <column id="finishHour" label="${i18n:_('Finish hour')}" align="center"
+                <column visible="false" id="finishHour" label="${i18n:_('Finish hour')}" align="center"
                     sort="auto(clockFinish)" sortDirection="ascending"/>
                 <column id="hours" label="${i18n:_('Hours')}" align="center"
                     sort="auto(effort)" sortDirection="ascending"/>
-                <column id="hourType" label="${i18n:_('Hours type')}" align="center"
-                    sort="auto(typeOfWorkHours.name)" sortDirection="ascending"/>
-                <column label="${i18n:_('Timesheet')}" align="center"/>
+                <column id="hourType" label="${i18n:_('Note')}" align="center"
+                    sort="auto(note)" sortDirection="ascending"/>
+                <column visible="false" label="${i18n:_('Timesheet')}" align="center"/>
                 </columns>
                 <rows>
                 <row self="@{each='queryWorkReportLine'}" value="@{queryWorkReportLine}">
@@ -125,11 +127,11 @@
                     <label value="@{queryWorkReportLine.orderElement.order.name}" />
                     <label value="@{queryWorkReportLine.orderElement.code}" />
                     <label value="@{queryWorkReportLine.orderElement.name}" />
-                    <label value="@{queryWorkReportLine.clockStart, converter='org.libreplan.web.common.typeconverters.TimeConverter'}" />
-                    <label value="@{queryWorkReportLine.clockFinish, converter='org.libreplan.web.common.typeconverters.TimeConverter'}" />
+                    <label visible="false" value="@{queryWorkReportLine.clockStart, converter='org.libreplan.web.common.typeconverters.TimeConverter'}" />
+                    <label visible="false" value="@{queryWorkReportLine.clockFinish, converter='org.libreplan.web.common.typeconverters.TimeConverter'}" />
                     <label value="@{queryWorkReportLine.effort.toFormattedString}" />
-                    <label value="@{queryWorkReportLine.typeOfWorkHours.name}" />
-                    <button sclass="icono" image="/common/img/ico_editar1.png"
+                    <label value="@{queryWorkReportLine.note}" />
+                    <button visible="false" sclass="icono" image="/common/img/ico_editar1.png"
                         hoverImage="/common/img/ico_editar.png"
                         tooltiptext="${i18n:_('Edit')}"
                         onClick="controller.goToEditFormQuery(self.parent.value);">

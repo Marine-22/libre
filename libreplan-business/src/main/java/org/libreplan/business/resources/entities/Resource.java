@@ -1221,4 +1221,8 @@ public abstract class Resource extends IntegrationEntity implements
         return calendar.isActiveBetween(startDate, endDate);
     }
 
+    public String toString(){
+    	return "Resource[class = "+this.getClass().getName()+"]";
+    }
+    
 }

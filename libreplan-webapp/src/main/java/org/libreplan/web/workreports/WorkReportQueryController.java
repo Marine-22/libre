@@ -23,6 +23,11 @@ package org.libreplan.web.workreports;
 
 import static org.libreplan.web.I18nHelper._;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -31,6 +36,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.activation.MimetypesFileTypeMap;
+
+import org.apache.commons.logging.LogFactory;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.model.StylesTable;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
 import org.libreplan.business.costcategories.entities.TypeOfWorkHours;
 import org.libreplan.business.orders.entities.OrderElement;
@@ -58,6 +74,7 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Constraint;
 import org.zkoss.zul.Datebox;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.SimpleListModel;
@@ -77,6 +94,10 @@ import org.zkoss.zul.api.Window;
 @SuppressWarnings("serial")
 public class WorkReportQueryController extends GenericForwardComposer {
 
+	private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(WorkReportQueryController.class);
+	
+	private static final String TIME_SHEET_NAME = "TS.xlsx";
+	
     private IWorkReportModel workReportModel;
 
     private Datebox filterStartDateLine;
@@ -172,6 +193,7 @@ public class WorkReportQueryController extends GenericForwardComposer {
      * @param event
      */
     public void onApplyFilterWorkReportLines(Event event) {
+    	LOG.info("");
         OrderElement selectedOrder = getSelectedOrderElement();
         List<WorkReportLine> workReportLines = workReportModel
                 .getAllWorkReportLines();
@@ -183,6 +205,86 @@ public class WorkReportQueryController extends GenericForwardComposer {
         }
         filterByPredicateLines();
         updateSummary();
+    }
+    
+    public void getTimesheetExcel() {
+        OrderElement selectedOrder = getSelectedOrderElement();
+        List<WorkReportLine> workReportLines = workReportModel.getAllWorkReportLines();
+
+        if (selectedOrder == null) {
+            createPredicateLines(filterOrderElements(workReportLines));
+        } else {
+            createPredicateLines(Collections.singletonList(selectedOrder));
+        }
+        filterByPredicateLines();
+        //filterWorkReportLines - zdroj dat
+        // predicates - filter
+        
+        try {
+        	InputStream is = WorkReportQueryController.class.getResourceAsStream(TIME_SHEET_NAME);
+        	Workbook wb = new XSSFWorkbook(is);
+        	Sheet sheet = wb.getSheetAt(0);
+        	fillFilter(sheet, selectedOrder);
+        	fillData(sheet);
+	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	        wb.write(baos);
+	        wb.close();
+	        is.close();
+	        byte[] data = baos.toByteArray();
+	        baos.close();
+	        InputStream isFinal = new ByteArrayInputStream(data);
+            Filedownload.save(isFinal, new MimetypesFileTypeMap().getContentType(TIME_SHEET_NAME), TIME_SHEET_NAME);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+
+    
+    private String getValueOrDefault(String value, String def){
+    	if(value == null || "".equals(value.trim())){
+    		return def;
+    	}
+    	return value;
+    }
+    
+    private String getValueOrDefault(Date value, String def){
+    	if(value == null){
+    		return def;
+    	}
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    	return sdf.format(value);
+    }
+    
+    private void fillFilter(Sheet sheet, OrderElement selectedOrder){        
+	    Resource resource = getSelectedResource();
+	    Date startDate = filterStartDateLine.getValue();
+	    Date finishDate = filterFinishDateLine.getValue();
+	    
+	    LOG.info("resource: " + resource + "; startDate = " + startDate + "; finishDate = " + finishDate + "; selectedOrder = " + (selectedOrder == null ? "null" : selectedOrder.getName()));
+	    
+    	sheet.getRow(2).getCell(5).setCellValue(getValueOrDefault((resource == null ? null : resource.getName()), "All"));
+    	sheet.getRow(3).getCell(5).setCellValue(getValueOrDefault(selectedOrder == null ? null : selectedOrder.getName(), "All")); // task
+    	sheet.getRow(4).getCell(5).setCellValue(getValueOrDefault(startDate, "All"));
+    	sheet.getRow(5).getCell(5).setCellValue(getValueOrDefault(finishDate, "All"));
+    }
+    
+    private void fillData(Sheet sheet){
+    	int index = 10;
+    	for(WorkReportLine wrl : filterWorkReportLines){
+    		createRow(sheet.createRow(index++), wrl);
+    	}
+    }
+    
+    private void createRow(Row r, WorkReportLine data){
+    	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    	r.createCell(0).setCellValue(sdf.format(data.getDate()));
+    	r.createCell(1).setCellValue(data.getResource().getShortDescription());
+    	r.createCell(2).setCellValue(data.getOrderElement().getOrder().getName());
+    	r.createCell(3).setCellValue(data.getOrderElement().getName());
+    	r.createCell(4).setCellValue(data.getEffort().toFormattedString());
+    	r.createCell(5).setCellValue(data.getNote());
     }
 
     private void updateSummary() {

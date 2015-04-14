@@ -88,4 +88,8 @@ public class DescriptionValue implements INewObject {
         }
         this.value = value;
     }
+    
+    public String toString(){
+    	return "DescriptionValue[fieldName="+fieldName+"; value="+value+"]";
+    }
 }

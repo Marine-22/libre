@@ -56,7 +56,8 @@ public class WorkReportLinePredicate implements IPredicate {
         WorkReportLine line = (WorkReportLine) object;
         return (isEqual(resource, line.getResource())
                 && isEqual(orderElement, line.getOrderElement())
-                && isEqual(hourType, line.getTypeOfWorkHours()) && acceptFiltersDates(line));
+                && isEqual(hourType, line.getTypeOfWorkHours()) 
+                && acceptFiltersDates(line));
     }
 
     private boolean isEqual(BaseEntity entityPredicate, BaseEntity entityLine) {

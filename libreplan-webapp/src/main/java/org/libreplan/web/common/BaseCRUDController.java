@@ -22,6 +22,7 @@ package org.libreplan.web.common;
 import static org.libreplan.web.I18nHelper._;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.LogFactory;
 import org.libreplan.business.common.IHumanIdentifiable;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
 import org.libreplan.business.common.exceptions.ValidationException;
@@ -49,6 +50,9 @@ import org.zkoss.zul.api.Window;
 public abstract class BaseCRUDController<T extends IHumanIdentifiable> extends
         GenericForwardComposer {
 
+    private static final org.apache.commons.logging.Log LOG = LogFactory
+            .getLog(BaseCRUDController.class);
+    
     private OnlyOneVisible visibility;
 
     protected IMessagesForUser messagesForUser;
@@ -81,7 +85,6 @@ public abstract class BaseCRUDController<T extends IHumanIdentifiable> extends
         comp.setAttribute("controller", this);
 
         messagesForUser = new MessagesForUser(messagesContainer);
-
         listWindow.setTitle(_("{0} List", getPluralEntityType()));
         showListWindow();
     }

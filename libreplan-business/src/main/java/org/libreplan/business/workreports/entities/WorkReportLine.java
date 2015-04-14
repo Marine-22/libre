@@ -27,20 +27,28 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.LogFactory;
+
+import javax.persistence.Transient;
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.Valid;
+
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.joda.time.Seconds;
 import org.libreplan.business.common.IntegrationEntity;
 import org.libreplan.business.common.Registry;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
+import org.libreplan.business.costcategories.entities.CostCategory;
+import org.libreplan.business.costcategories.entities.HourCost;
+import org.libreplan.business.costcategories.entities.ResourcesCostCategoryAssignment;
 import org.libreplan.business.costcategories.entities.TypeOfWorkHours;
 import org.libreplan.business.labels.entities.Label;
 import org.libreplan.business.labels.entities.LabelType;
 import org.libreplan.business.orders.entities.OrderElement;
 import org.libreplan.business.resources.entities.Resource;
+import org.libreplan.business.resources.entities.Worker;
 import org.libreplan.business.workingday.EffortDuration;
 import org.libreplan.business.workreports.daos.IWorkReportLineDAO;
 import org.libreplan.business.workreports.valueobjects.DescriptionField;
@@ -55,12 +63,18 @@ import org.libreplan.business.workreports.valueobjects.DescriptionValue;
 public class WorkReportLine extends IntegrationEntity implements
         Comparable<WorkReportLine>,
         IWorkReportsElements {
+	
+	@Transient
+	private static final org.apache.commons.logging.Log LOG = LogFactory
+	            .getLog(WorkReportLine.class);
 
     public static WorkReportLine create(WorkReport workReport) {
         return create(new WorkReportLine(workReport));
     }
 
     private EffortDuration effort;
+    
+    private String note;
 
     private Date date;
 
@@ -576,4 +590,24 @@ public class WorkReportLine extends IntegrationEntity implements
         return lines.isEmpty();
     }
 
+    public String toString(){
+    	return "WorkReportLine[effort="+effort+"; date="+date+"]";
+    }
+
+	public void setNote(String value) {
+		this.note = value;
+	}
+
+	public String getNote() {
+		return this.note;
+	}
+
+	public boolean bindTypeOfWorkHours() {
+		this.typeOfWorkHours = null;
+		if(resource instanceof Worker){
+			Worker w = (Worker)resource;
+			this.typeOfWorkHours = w.getTypeOfWorkHours();
+		}
+		return this.typeOfWorkHours != null;
+	}
 }

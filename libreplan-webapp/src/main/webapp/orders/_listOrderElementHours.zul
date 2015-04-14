@@ -36,10 +36,8 @@
                     </columns>
                     <rows>
                         <row self="@{each='workReportLine'}">
-                            <label
-                                value="@{workReportLine.date, converter='org.libreplan.web.common.typeconverters.DateConverter'}" />
-                            <label
-                                value="@{workReportLine.resource.shortDescription}" />
+                            <label value="@{workReportLine.date, converter='org.libreplan.web.common.typeconverters.DateConverter'}" />
+                            <label value="@{workReportLine.resource.shortDescription}" />
                             <label value="@{workReportLine.typeOfWorkHours.name}" />
                             <label value="@{workReportLine.sumEffort.toFormattedString}" />
                         </row>
