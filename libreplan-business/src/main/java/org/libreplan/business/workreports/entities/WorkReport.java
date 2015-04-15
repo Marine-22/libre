@@ -30,9 +30,12 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
+
 import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.NotNull;
 import javax.validation.Valid;
+
 import org.joda.time.LocalDate;
 import org.libreplan.business.common.IntegrationEntity;
 import org.libreplan.business.common.Registry;
@@ -57,6 +60,9 @@ import org.libreplan.business.workreports.valueobjects.DescriptionValue;
  */
 public class WorkReport extends IntegrationEntity implements
         IWorkReportsElements {
+	
+	private static final org.apache.commons.logging.Log LOG = LogFactory
+	            .getLog(WorkReport.class);
 
     public static final String DATE = "date";
     public static final String RESOURCE = "resource";
@@ -584,9 +590,11 @@ public class WorkReport extends IntegrationEntity implements
 			for(WorkReportLine wrl : workReportLines){
 				// TODO toto treba checknut
 				if(wrl.getOrderElement().equals(entity)){
+					LOG.info("Pridavam do ToDel:");
 					toDel.add(wrl);
 				}
 			}
+			LOG.info("ToDel.size():" + toDel.size());
 			workReportLines.removeAll(toDel);
 		}
 		

@@ -207,7 +207,7 @@ public class WorkReportQueryController extends GenericForwardComposer {
         updateSummary();
     }
     
-    public void getTimesheetExcel() {
+    public void getTimesheetExcel() throws Exception{
         OrderElement selectedOrder = getSelectedOrderElement();
         List<WorkReportLine> workReportLines = workReportModel.getAllWorkReportLines();
 
@@ -220,24 +220,24 @@ public class WorkReportQueryController extends GenericForwardComposer {
         //filterWorkReportLines - zdroj dat
         // predicates - filter
         
-        try {
-        	InputStream is = WorkReportQueryController.class.getResourceAsStream(TIME_SHEET_NAME);
-        	Workbook wb = new XSSFWorkbook(is);
-        	Sheet sheet = wb.getSheetAt(0);
-        	fillFilter(sheet, selectedOrder);
-        	fillData(sheet);
-	        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	        wb.write(baos);
-	        wb.close();
-	        is.close();
-	        byte[] data = baos.toByteArray();
-	        baos.close();
-	        InputStream isFinal = new ByteArrayInputStream(data);
-            Filedownload.save(isFinal, new MimetypesFileTypeMap().getContentType(TIME_SHEET_NAME), TIME_SHEET_NAME);
+        //try {
+    	InputStream is = WorkReportQueryController.class.getResourceAsStream(TIME_SHEET_NAME);
+    	Workbook wb = new XSSFWorkbook(is);
+    	Sheet sheet = wb.getSheetAt(0);
+    	fillFilter(sheet, selectedOrder);
+    	fillData(sheet);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        wb.write(baos);
+        wb.close();
+        is.close();
+        byte[] data = baos.toByteArray();
+        baos.close();
+        InputStream isFinal = new ByteArrayInputStream(data);
+        Filedownload.save(isFinal, new MimetypesFileTypeMap().getContentType(TIME_SHEET_NAME), TIME_SHEET_NAME);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         
     }
 

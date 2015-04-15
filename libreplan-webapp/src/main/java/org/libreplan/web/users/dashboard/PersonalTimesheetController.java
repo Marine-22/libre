@@ -227,8 +227,15 @@ public class PersonalTimesheetController extends GenericForwardComposer
             
             Util.appendLabel(row, personalTimesheetModel.getOrder(orderElement).getName());
             Util.appendLabel(row, orderElement.getName());
-
-            appendInputsForDays(row, orderElement);
+            
+            
+            boolean hasTOH = personalTimesheetModel.hasUserTypeOfHours();
+            if(hasTOH){
+	            messagesForUser.showMessage(
+	                    Level.WARNING,
+	                    _("This user does not have time price set!"));
+            }
+            appendInputsForDays(row, orderElement, hasTOH);
 
             if (personalTimesheetModel.hasOtherReports()) {
                 appendOtherColumn(row, orderElement);
@@ -238,7 +245,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
         }
 
         private void appendInputsForDays(Row row,
-                final OrderElement orderElement) {
+                final OrderElement orderElement, boolean hasTOH) {
             for (LocalDate day = first; day.compareTo(last) <= 0; day = day
                     .plusDays(1)) {
                 final LocalDate textboxDate = day;
@@ -261,8 +268,8 @@ public class PersonalTimesheetController extends GenericForwardComposer
                             throw new WrongValueException(textbox,
                                     _("Invalid Effort Duration"));
                         }
-                        personalTimesheetModel.setEffortDuration(orderElement,
-                                textboxDate, effortDuration);
+                       	personalTimesheetModel.setEffortDuration(orderElement, textboxDate, effortDuration);
+
                         markAsModified(textbox);
                         updateTotals(orderElement, textboxDate);
                     }
@@ -281,14 +288,16 @@ public class PersonalTimesheetController extends GenericForwardComposer
                 EventListener openPersonalTimesheetPopup = new EventListener() {
                     @Override
                     public void onEvent(Event event) throws Exception {
-                        openPersonalTimesheetPopup(textbox,
-                                orderElement, textboxDate);
+                        openPersonalTimesheetPopup(textbox, orderElement, textboxDate);
                     }
-
                 };
-                textbox.addEventListener(Events.ON_DOUBLE_CLICK, openPersonalTimesheetPopup);
-                textbox.addEventListener(Events.ON_OK, openPersonalTimesheetPopup);
-
+                if(hasTOH){
+	                textbox.addEventListener(Events.ON_DOUBLE_CLICK, openPersonalTimesheetPopup);
+	                textbox.addEventListener(Events.ON_OK, openPersonalTimesheetPopup);
+                }
+                else{
+                	textbox.setReadonly(true);
+                }
                 if (personalTimesheetModel.wasModified(orderElement, textboxDate)) {
                     markAsModified(textbox);
                 }

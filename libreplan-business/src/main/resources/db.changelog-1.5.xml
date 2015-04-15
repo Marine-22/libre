@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+     <changeSet author="fmorvay" id="create-new-table-holiday">
+        <createTable tableName="holiday">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="holiday_pkey"/>
+            </column>
+            <column name="version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="from" type="DATE"/>
+            <column name="to" type="DATE"/>
+
+        
+            <column name="value" type="DECIMAL(19,2)"/>
+            <column name="advance_assignment_id" type="BIGINT"/>
+            <column name="communication_date" type="DATETIME"/>
+        </createTable>
+    </changeSet>
+    
+    
+     <changeSet author="fmorvay" id="remove-name-constraint-type-of-hours">
+        <dropUniqueConstraint tableName="type_of_work_hours" constraintName="type_of_work_hours_name_key" uniqueColumns="name"/>
+    </changeSet>
+
+</databaseChangeLog>
