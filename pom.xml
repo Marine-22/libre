@@ -766,6 +766,14 @@
                                 <include>context.xml</include>
                             </includes>
                         </resource>
+                        <resource>
+                            <directory>src/main/java/org/libreplan/web/workreports</directory>
+                            <targetPath>WEB-INF/classes/org/libreplan/web/workreports</targetPath>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>TS.xlsx</include>
+                            </includes>
+                        </resource>
                     </webResources>
                 </configuration>
             </plugin>
