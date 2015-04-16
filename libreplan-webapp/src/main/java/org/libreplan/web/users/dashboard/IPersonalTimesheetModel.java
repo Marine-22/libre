@@ -256,6 +256,5 @@ public interface IPersonalTimesheetModel {
 
 	void setNoteText(OrderElement orderElement, LocalDate textboxDate, String value);
 
-	boolean hasUserTypeOfHours();
 
 }

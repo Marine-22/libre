@@ -12,8 +12,8 @@
             <column name="version" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="from" type="DATE"/>
-            <column name="to" type="DATE"/>
+            <column name="dateFrom" type="DATE"/>
+            <column name="dateTo" type="DATE"/>
 
         
             <column name="value" type="DECIMAL(19,2)"/>

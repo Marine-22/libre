@@ -414,7 +414,6 @@ public class PersonalTimesheetModel implements IPersonalTimesheetModel {
             EffortDuration effortDuration){
         WorkReportLine workReportLine = getOrCreateWorkReportLine(orderElement,
                 date);
-        LOG.info("orderElement = " + orderElement + "; workReportLine="+workReportLine+"; date=" + date.toString() + "; effortDuration=" + effortDuration);
         workReportLine.setEffort(effortDuration);
         modified = true;
         markAsModified(orderElement, date);
@@ -424,7 +423,6 @@ public class PersonalTimesheetModel implements IPersonalTimesheetModel {
     public void setNoteText(OrderElement orderElement, LocalDate textboxDate, String value){
     	 WorkReportLine workReportLine = getOrCreateWorkReportLine(orderElement,
     			 textboxDate);
-    	 LOG.info("orderElement = " + orderElement + "; workReportLine="+workReportLine+"; textboxDate=" + textboxDate.toString() + "; value=" + value);
     	 workReportLine.setNote(value);
     	 modified = true;
          markAsModified(orderElement, textboxDate);
@@ -702,14 +700,6 @@ public class PersonalTimesheetModel implements IPersonalTimesheetModel {
                         orderElement, workReport);
         return !lines.isEmpty();
     }
-    
-    @Override
-    public boolean hasUserTypeOfHours() {
-    	if(workReport.getResource() instanceof Worker){
-    		Worker w = (Worker)workReport.getResource();
-    		return w.getTypeOfWorkHours() != null;
-    	}
-    	return false;
-    }
+
 
 }

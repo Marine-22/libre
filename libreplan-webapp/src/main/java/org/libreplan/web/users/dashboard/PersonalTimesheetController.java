@@ -150,14 +150,11 @@ public class PersonalTimesheetController extends GenericForwardComposer
                     _("Confirm"), Messagebox.OK | Messagebox.CANCEL,
                     Messagebox.QUESTION) == Messagebox.OK) {
                 if(delete(entity)){
-	                messagesForUser.showMessage(
-	                        Level.INFO,
-	                        _("task \"{0}\" deleted", entity.getName()));
 	                Util.reloadBindings(timesheet);
                 }
                 else{
                 	messagesForUser.showMessage(
-	                        Level.INFO,
+	                        Level.WARNING,
 	                        _("task \"{0}\" was not deleted. Something went wrong.", entity.getName()));
                 }
             }

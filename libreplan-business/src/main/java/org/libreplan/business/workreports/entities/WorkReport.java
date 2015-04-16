@@ -576,7 +576,6 @@ public class WorkReport extends IntegrationEntity implements
     	
     	return  "date = " + date + 
     			"\nworkReportType = " + workReportType + 
-    			//"\nresource = " + resource + 
     			"\norderElement = " + orderElement + 
     			"\nlabels = " + labels + 
     			"\nworkReportLines" + workReportLines + 
@@ -585,17 +584,18 @@ public class WorkReport extends IntegrationEntity implements
     }
 
 	public void clearOrderElement(OrderElement entity) {
+//		LOG.info("workReportLines is null? " + (workReportLines == null));
 		if(workReportLines != null){
 			Set<WorkReportLine> toDel = new HashSet<WorkReportLine>();
 			for(WorkReportLine wrl : workReportLines){
-				// TODO toto treba checknut
 				if(wrl.getOrderElement().equals(entity)){
-					LOG.info("Pridavam do ToDel:");
-					toDel.add(wrl);
+	//				LOG.info("Pridavam do ToDel:");
+					//toDel.add(wrl);
+					wrl.setEffort(EffortDuration.zero());
 				}
 			}
-			LOG.info("ToDel.size():" + toDel.size());
-			workReportLines.removeAll(toDel);
+//			LOG.info("ToDel.size():" + toDel.size());
+			//workReportLines.removeAll(toDel);
 		}
 		
 	}
