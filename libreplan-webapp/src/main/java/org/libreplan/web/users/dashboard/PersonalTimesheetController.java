@@ -229,13 +229,13 @@ public class PersonalTimesheetController extends GenericForwardComposer
             Util.appendLabel(row, orderElement.getName());
             
             
-            boolean hasTOH = personalTimesheetModel.hasUserTypeOfHours();
-            if(hasTOH){
-	            messagesForUser.showMessage(
-	                    Level.WARNING,
-	                    _("This user does not have time price set!"));
-            }
-            appendInputsForDays(row, orderElement, hasTOH);
+//            boolean hasTOH = personalTimesheetModel.hasUserTypeOfHours();
+//            if(hasTOH){
+//	            messagesForUser.showMessage(
+//	                    Level.WARNING,
+//	                    _("This user does not have time price set!"));
+//            }
+            appendInputsForDays(row, orderElement);
 
             if (personalTimesheetModel.hasOtherReports()) {
                 appendOtherColumn(row, orderElement);
@@ -245,7 +245,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
         }
 
         private void appendInputsForDays(Row row,
-                final OrderElement orderElement, boolean hasTOH) {
+                final OrderElement orderElement) {
             for (LocalDate day = first; day.compareTo(last) <= 0; day = day
                     .plusDays(1)) {
                 final LocalDate textboxDate = day;
@@ -291,13 +291,9 @@ public class PersonalTimesheetController extends GenericForwardComposer
                         openPersonalTimesheetPopup(textbox, orderElement, textboxDate);
                     }
                 };
-                if(hasTOH){
-	                textbox.addEventListener(Events.ON_DOUBLE_CLICK, openPersonalTimesheetPopup);
-	                textbox.addEventListener(Events.ON_OK, openPersonalTimesheetPopup);
-                }
-                else{
-                	textbox.setReadonly(true);
-                }
+                textbox.addEventListener(Events.ON_DOUBLE_CLICK, openPersonalTimesheetPopup);
+                textbox.addEventListener(Events.ON_OK, openPersonalTimesheetPopup);
+                
                 if (personalTimesheetModel.wasModified(orderElement, textboxDate)) {
                     markAsModified(textbox);
                 }

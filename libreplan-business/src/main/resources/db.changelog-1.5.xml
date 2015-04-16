@@ -26,5 +26,10 @@
      <changeSet author="fmorvay" id="remove-name-constraint-type-of-hours">
         <dropUniqueConstraint tableName="type_of_work_hours" constraintName="type_of_work_hours_name_key" uniqueColumns="name"/>
     </changeSet>
+    
+    <!--  Predchadzajuci remove nebol dobry kvoli komplexnym vazbam v systeme  -->
+    <changeSet author="fmorvay" id="add-name-constraint-type-of-hours">
+        <addUniqueConstraint tableName="type_of_work_hours" columnNames="name" constraintName="type_of_work_hours_name_key"/>
+    </changeSet>
 
 </databaseChangeLog>

@@ -700,9 +700,9 @@ public class WorkerModel extends IntegrationEntityModel implements IWorkerModel 
     }
 
     @Override
-    public void initTypeOfHours() {
+    public void initTypeOfHours(Worker o) {
     	if(worker.getTypeOfWorkHours() == null){
-    		worker.setTypeOfWorkHours(TypeOfWorkHours.create(null, "Worker hour price"));
-    	}
+    		worker.setTypeOfWorkHours(TypeOfWorkHours.create(null, o.getUser().getLoginName() + " hour price"));
+    	} 
     }
 }
