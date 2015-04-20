@@ -22,12 +22,25 @@
 package org.libreplan.business.resources.entities;
 
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
 
+import javax.persistence.Transient;
 import javax.validation.constraints.AssertTrue;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.LocalDate;
 
 import javax.validation.Valid;
 
@@ -49,7 +62,7 @@ import org.libreplan.business.users.entities.UserRole;
  */
 public class Worker extends Resource {
 
-	@SuppressWarnings("unused")
+
     private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(Worker.class);
     
     public static Worker create() {
@@ -106,7 +119,10 @@ public class Worker extends Resource {
 
     private User user;
     
-    private TypeOfWorkHours typeOfWorkHours;
+    private Set<TypeOfWorkHours> typeOfWorkHours;
+    
+    @Transient
+    private TypeOfWorkHours tempTowh;
 
     /**
      * Constructor for hibernate. Do not use!
@@ -287,13 +303,105 @@ public class Worker extends Resource {
         return user.getRoles().contains(UserRole.ROLE_BOUND_USER);
     }
 
-	public TypeOfWorkHours getTypeOfWorkHours() {
+	public Set<TypeOfWorkHours> getTypeOfWorkHours() {
 		return typeOfWorkHours;
 	}
 
-	public void setTypeOfWorkHours(TypeOfWorkHours typeOfWorkHours) {
+	public void setTypeOfWorkHours(Set<TypeOfWorkHours> typeOfWorkHours) {
 		this.typeOfWorkHours = typeOfWorkHours;
 	}
 
-    
+	public TypeOfWorkHours getNewTypeOfHours(){
+		LOG.info("getNewTypeOfHours. typeOfWorkHours = " + typeOfWorkHours + "; tempTowh=" + tempTowh);
+		if(tempTowh != null) return tempTowh;
+		if(this.typeOfWorkHours == null)
+			this.typeOfWorkHours = new HashSet<TypeOfWorkHours>();
+
+		tempTowh = TypeOfWorkHours.create();
+		TypeOfWorkHours last = findTypOfHours(new Date());
+		if(last != null){
+			tempTowh.setValidFrom(last.getValidFrom());
+			tempTowh.setDefaultPrice(last.getDefaultPrice());
+		}
+		tempTowh.setWorker(this);
+		LOG.info("tempTowh = " + tempTowh + "; typeOfWorkHours = " + typeOfWorkHours);
+		return tempTowh;
+	}
+	
+	public void resolveTypeOfHours() {
+		LOG.info("resolveTypeOfHours. typeOfWorkHours = " + typeOfWorkHours);
+		LOG.info("tempTowh = " + tempTowh);
+		boolean found = false;
+		for(TypeOfWorkHours t : typeOfWorkHours){
+			if(t.getValidFrom().getTime() == tempTowh.getValidFrom().getTime()){
+				LOG.info("datumy sa rovnaju. t=" + t + " ;tempTowh=" + tempTowh);
+				// nerobim pridanie ale zmenu existujucej
+				t.setDefaultPrice(tempTowh.getDefaultPrice());
+				found = true;
+				break;
+			}
+		}
+		if(!found) typeOfWorkHours.add(tempTowh);
+		cleanTypeOfHours();
+	}
+	
+	// nastavi mena entitam type of hours podla ich platnosti
+	private void cleanTypeOfHours(){
+		LOG.info("cleanTypeOfHours; typeOfWorkHours=" + typeOfWorkHours);
+		List<TypeOfWorkHours> l = new ArrayList<TypeOfWorkHours>();
+		l.addAll(typeOfWorkHours);
+		
+		Collections.sort(l, new Comparator<TypeOfWorkHours>() {
+			public int compare(TypeOfWorkHours o1, TypeOfWorkHours o2) {
+				return o1.getValidFrom().compareTo(o2.getValidFrom());
+			}
+		});
+		
+
+		LOG.info("cleanTypeOfHours; sorted list typeOfWorkHours=" + l);
+		int listSize = l.size();
+		for(int i = 0; i < listSize; i++){
+			TypeOfWorkHours tmp = l.get(i);
+			if((i+1) == listSize){ // posledny type of hours
+				tmp.setName(getFirstName() + " " + getSurname() + " hour price");
+			}
+			else{ // ma nasledovnikov
+				TypeOfWorkHours tmp1 = l.get(i+1);
+				tmp.setName(getFirstName() + " " + getSurname() + " hour price (do "+new SimpleDateFormat("dd.MM.yyyy").format(tmp1.getValidFrom())+")" );
+			}
+		}
+
+		LOG.info("cleanTypeOfHours; final list typeOfWorkHours=" + typeOfWorkHours);
+	}
+	
+	public TypeOfWorkHours findTypOfHours(LocalDate date) {
+		return findTypOfHours(date.toDate());
+	}
+	
+	private TypeOfWorkHours findTypOfHours(Date date) {
+		if(typeOfWorkHours != null){
+			TypeOfWorkHours t = null; // t hladam co najblizsie k nejakemu datumu tak, kde t.datum < date 
+			TypeOfWorkHours tMin = null;
+			long minDiff = Long.MAX_VALUE;
+			long maxDiff = Long.MIN_VALUE;
+			
+			for(TypeOfWorkHours towh : typeOfWorkHours){
+				long diff = date.getTime() - towh.getValidFrom().getTime();
+				if(0 <= diff && diff < minDiff){
+					t = towh;
+					minDiff = diff;
+				}
+				if(maxDiff < diff && diff < 0){
+					maxDiff = diff;
+					tMin = towh;
+				}
+			}
+			if(t == null)
+				return tMin;
+			return t;
+		}
+		return null;
+
+	}
+   
 }

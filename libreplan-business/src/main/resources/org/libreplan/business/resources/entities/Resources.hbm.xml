@@ -59,12 +59,16 @@
       <property name="surname"/>
       <property name="nif"/>
 
+	    <set name="typeOfWorkHours" inverse="true" cascade="all, delete-orphan" lazy="false">
+	        <key column="worker_id"/>
+	        <one-to-many class="org.libreplan.business.costcategories.entities.TypeOfWorkHours"/>
+	    </set>
 	    <!-- Indexed -->
-	    <many-to-one name="typeOfWorkHours" cascade="save-update" 
-	    	class="org.libreplan.business.costcategories.entities.TypeOfWorkHours"
-	    	lazy="false"
-	        column="type_work_hours_id" not-null="false"
-	        index="idx_type_of_work_hours_on_worker" />
+<!-- 	    <many-to-one name="typeOfWorkHours" cascade="save-update, delete"  -->
+<!-- 	    	class="org.libreplan.business.costcategories.entities.TypeOfWorkHours" -->
+<!-- 	    	lazy="false" -->
+<!-- 	        column="type_work_hours_id" not-null="false" -->
+<!-- 	        index="idx_type_of_work_hours_on_worker" /> -->
         
         <many-to-one name="user" cascade="save-update"
             class="org.libreplan.business.users.entities.User"

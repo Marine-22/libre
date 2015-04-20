@@ -93,11 +93,16 @@
                                 <textbox value="@{controller.virtualWorkerObservations}" width="500px" multiline="true" />
                             </row>
                             <row>
+                            
                                 <label value="${i18n:_('Hour costs')}" />
-                                <decimalbox id="defaultPrice"
-                                    constraint="no empty:${i18n:_('cannot be empty')}"
-                                    value="@{controller.worker.typeOfWorkHours.defaultPrice}"
-                                    format="@{controller.moneyFormat}" />
+                                <hbox>
+	                                <decimalbox id="defaultPrice"
+	                                    constraint="no empty:${i18n:_('cannot be empty')}"
+	                                    value="@{controller.worker.newTypeOfHours.defaultPrice}"
+	                                    format="@{controller.moneyFormat}" />
+	                                 <label value="${i18n:_('from')}" />
+	                                 <datebox id="defaultPriceFrom" value="@{controller.worker.newTypeOfHours.validFrom}" constraint="no empty:${i18n:_('cannot be empty')}" />
+                                </hbox>
                             </row>
                             
                         </rows>

@@ -32,7 +32,6 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.LogFactory;
 import org.joda.time.LocalDate;
 import org.libreplan.business.calendars.entities.BaseCalendar;
 import org.libreplan.business.calendars.entities.ResourceCalendar;
@@ -216,7 +215,6 @@ public class WorkerCRUDController extends GenericForwardComposer implements
     }
 
     public Worker getWorker() {
-    	if(workerModel == null) return null;
     	return workerModel.getWorker();
     }
 
@@ -259,7 +257,6 @@ public class WorkerCRUDController extends GenericForwardComposer implements
         validateConstraints();
 
         setUserBindingInfo();
-
         // Validate 'Cost category assignment' tab is correct
         if (resourcesCostCategoryAssignmentController != null) {
             if (!resourcesCostCategoryAssignmentController.validate()) {
@@ -399,7 +396,6 @@ public class WorkerCRUDController extends GenericForwardComposer implements
         Textbox workerFirstname = (Textbox) editWindow
                 .getFellow("workerFirstname");
         workerFirstname.focus();
-        workerModel.initTypeOfHours(worker);
     }
 
     private void updateUserBindingComponents() {

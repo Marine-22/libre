@@ -4,6 +4,7 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
+<!-- 
      <changeSet author="fmorvay" id="create-new-table-holiday">
         <createTable tableName="holiday">
             <column name="id" type="BIGINT">
@@ -21,7 +22,7 @@
             <column name="communication_date" type="DATETIME"/>
         </createTable>
     </changeSet>
-    
+     -->
     
      <changeSet author="fmorvay" id="remove-name-constraint-type-of-hours">
         <dropUniqueConstraint tableName="type_of_work_hours" constraintName="type_of_work_hours_name_key" uniqueColumns="name"/>
@@ -31,5 +32,15 @@
     <changeSet author="fmorvay" id="add-name-constraint-type-of-hours">
         <addUniqueConstraint tableName="type_of_work_hours" columnNames="name" constraintName="type_of_work_hours_name_key"/>
     </changeSet>
-
+    
+    <changeSet author="fmorvay" id="change-work-hour-type-assotiation-to-set">
+        <addColumn tableName="type_of_work_hours">
+            <column name="worker_id" type="BIGINT" defaultValue="NULL"/>
+            <column name="valid_from" type="DATETIME"/>
+        </addColumn>
+    </changeSet>
+	
+	<changeSet author="fmorvay" id="remove-name-constraint-type-of-hours-druhy-pokus">
+        <dropUniqueConstraint tableName="type_of_work_hours" constraintName="type_of_work_hours_name_key" uniqueColumns="name"/>
+    </changeSet>
 </databaseChangeLog>
