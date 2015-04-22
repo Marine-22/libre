@@ -21,7 +21,9 @@
 
 package org.libreplan.business.workreports.entities;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -43,9 +45,6 @@ import org.joda.time.Seconds;
 import org.libreplan.business.common.IntegrationEntity;
 import org.libreplan.business.common.Registry;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
-import org.libreplan.business.costcategories.entities.CostCategory;
-import org.libreplan.business.costcategories.entities.HourCost;
-import org.libreplan.business.costcategories.entities.ResourcesCostCategoryAssignment;
 import org.libreplan.business.costcategories.entities.TypeOfWorkHours;
 import org.libreplan.business.labels.entities.Label;
 import org.libreplan.business.labels.entities.LabelType;
@@ -610,6 +609,7 @@ public class WorkReportLine extends IntegrationEntity implements
 			
 			Worker w = (Worker)resource;
 			LOG.info("bindTypeOfWorkHours: typeOfHours: " + w.getTypeOfWorkHours());
+			if(w.getTypeOfWorkHours().isEmpty()) return;
 			List<TypeOfWorkHours> l = new ArrayList<TypeOfWorkHours>();
 			l.addAll(w.getTypeOfWorkHours());
 			
@@ -620,10 +620,9 @@ public class WorkReportLine extends IntegrationEntity implements
 			});
 
 			LOG.info("bindTypeOfWorkHours: typeOfHours: " + l);
-			
 			typeOfWorkHours = l.get(0);
 			for(int i = 1; i < l.size(); i++){
-				if(l.get(i).getValidFrom().before(date.toDate())){
+				if(l.get(i).getValidFrom().equals(date.toDate()) || l.get(i).getValidFrom().before(date.toDate())){
 					typeOfWorkHours = l.get(i);
 				}
 			}
