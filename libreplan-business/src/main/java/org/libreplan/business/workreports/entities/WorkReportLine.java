@@ -21,9 +21,7 @@
 
 package org.libreplan.business.workreports.entities;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -608,7 +606,6 @@ public class WorkReportLine extends IntegrationEntity implements
 		if(resource instanceof Worker){
 			
 			Worker w = (Worker)resource;
-			LOG.info("bindTypeOfWorkHours: typeOfHours: " + w.getTypeOfWorkHours());
 			if(w.getTypeOfWorkHours().isEmpty()) return;
 			List<TypeOfWorkHours> l = new ArrayList<TypeOfWorkHours>();
 			l.addAll(w.getTypeOfWorkHours());
@@ -618,15 +615,16 @@ public class WorkReportLine extends IntegrationEntity implements
 					return o1.getValidFrom().compareTo(o2.getValidFrom());
 				}
 			});
-
-			LOG.info("bindTypeOfWorkHours: typeOfHours: " + l);
 			typeOfWorkHours = l.get(0);
 			for(int i = 1; i < l.size(); i++){
-				if(l.get(i).getValidFrom().equals(date.toDate()) || l.get(i).getValidFrom().before(date.toDate())){
+				long l1 = date.toDate().getTime();
+				long l2 = l.get(i).getValidFrom().getTime();
+				if(l1 >= l2){
 					typeOfWorkHours = l.get(i);
 				}
 			}
 		}
 	}
-
+	
+	
 }
