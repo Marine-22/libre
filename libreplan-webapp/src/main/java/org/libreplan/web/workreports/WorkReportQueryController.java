@@ -193,7 +193,6 @@ public class WorkReportQueryController extends GenericForwardComposer {
      * @param event
      */
     public void onApplyFilterWorkReportLines(Event event) {
-    	LOG.info("");
         OrderElement selectedOrder = getSelectedOrderElement();
         List<WorkReportLine> workReportLines = workReportModel
                 .getAllWorkReportLines();

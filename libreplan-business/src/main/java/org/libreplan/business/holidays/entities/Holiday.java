@@ -1,30 +1,35 @@
 package org.libreplan.business.holidays.entities;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.libreplan.business.common.BaseEntity;
 import org.libreplan.business.common.IHumanIdentifiable;
-import org.libreplan.business.resources.entities.Worker;
+import org.libreplan.business.users.entities.User;
 
-public class Holiday extends BaseEntity implements IHumanIdentifiable{
+public class Holiday extends BaseEntity implements IHumanIdentifiable, Comparable<Holiday>{
 
 	protected Holiday(){}
 	
-	public static Holiday getHoliday(){
-		return new Holiday();
+	public static Holiday create(){
+		return (Holiday) create(new Holiday());
 	}
 	
-	private Worker ziadatel;
+	private User ziadatel;
 	private Date from;
 	private Date to;
 	private HolidayState state;
+	private String note;
 	
-	public Worker getZiadatel() {
+
+	public User getZiadatel() {
 		return ziadatel;
 	}
-	public void setZiadatel(Worker ziadatel) {
+
+	public void setZiadatel(User ziadatel) {
 		this.ziadatel = ziadatel;
 	}
+
 	public Date getFrom() {
 		return from;
 	}
@@ -43,14 +48,33 @@ public class Holiday extends BaseEntity implements IHumanIdentifiable{
 	public void setState(HolidayState state) {
 		this.state = state;
 	}
-	public enum HolidayState{
-		ZADANA,
-		SCHVALENA,
-		ZAMIETNUTA
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	@Override
+	public String getHumanId() {
+		if(from == null || to == null) return "NEW";
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy");
+		return "from " + sdf.format(from) + " to " + sdf.format(to);
 	}
 	
 	@Override
-	public String getHumanId() {
-		return null;
+	public int compareTo(Holiday o) {
+		return (int)((this.from.getTime()/1000) - (o.from.getTime()/1000));
 	}
+	
+	public String toString(){
+		return "Holiday: " + getHumanId() + " note: " + note;
+	}
+	
+	public String getInfoText(){
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy");
+		return ziadatel.getFullName() + " " + sdf.format(from) + "-" + sdf.format(to);
+	}
+
 }

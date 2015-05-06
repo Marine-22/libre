@@ -1,0 +1,50 @@
+<?taglib uri="/WEB-INF/tld/i18n.tld" prefix="i18n" ?>
+
+<window id="${arg.top_id}">
+    <caption id="caption" sclass="caption-title" />
+    
+        <tabbox>
+        <tabs>
+            <tab label="${i18n:_('New holiday request')}"></tab>
+        </tabs>
+        <tabpanels>
+            <tabpanel>
+                <vbox width="100%">
+                    <grid fixedLayout="true">
+                        <columns>
+                            <column width="200px" />
+                            <column />
+                        </columns>
+                        <rows>
+                            <row>
+                                <label value="${i18n:_('From')}:" />
+                                <datebox id="fromDate"
+                                    value="@{controller.holiday.from}" width="150px"
+                                    constraint="no empty:${i18n:_('cannot be empty')}"
+                                    onBlur="controller.updateWindowTitle()" sclass="focus-element" />
+                            </row>
+                            <row>
+                                <label value="${i18n:_('To')}:" />
+                                <datebox id="toDate" width="150px"
+                        			value="@{controller.holiday.to}"
+                             		constraint="no empty:${i18n:_('cannot be empty')}"/>
+                            </row>
+                            <row>
+                                <label value="${i18n:_('Note')}:" />
+                                <textbox id="dateboxExpenseDate" width="450px"
+                        			value="@{controller.holiday.note}"/>
+                            </row>
+                        </rows>
+                    </grid>
+                </vbox>
+            </tabpanel>
+        </tabpanels>
+    </tabbox>
+
+    <button onClick="controller.saveAndExit();" autodisable="self"
+        label="${i18n:_('Save')}" sclass="save-button global-action" />
+    <button onClick="controller.saveAndContinue();"
+        label="${i18n:_('Save &amp; Continue')}" sclass="saveandcontinue-button global-action" />
+    <button onClick="controller.cancelForm();"
+        label="${i18n:_('Cancel')}" sclass="cancel-button global-action" />
+</window>

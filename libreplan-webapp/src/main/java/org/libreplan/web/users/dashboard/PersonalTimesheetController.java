@@ -33,9 +33,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.LogFactory;
-import org.jfree.util.Log;
 import org.joda.time.LocalDate;
-import org.libreplan.business.common.exceptions.InstanceNotFoundException;
 import org.libreplan.business.orders.entities.OrderElement;
 import org.libreplan.business.users.entities.UserRole;
 import org.libreplan.business.workingday.EffortDuration;
@@ -63,7 +61,6 @@ import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Cell;
-import org.zkoss.zul.Checkbox;
 import org.zkoss.zul.Column;
 import org.zkoss.zul.Columns;
 import org.zkoss.zul.Frozen;
@@ -344,7 +341,7 @@ public class PersonalTimesheetController extends GenericForwardComposer
             
             
             personalTimesheetPopupNote.getChildren().clear();
-            final Textbox noteTextbox = Util.bind(new Textbox(),
+            final Textbox noteTextbox = Util.bind(new Textbox(),     		
                     new Util.Getter<String>() {
                 @Override
                 public String get() {
@@ -361,6 +358,9 @@ public class PersonalTimesheetController extends GenericForwardComposer
                             textboxDate, value);
                 }
             });
+            noteTextbox.setMultiline(true);
+            noteTextbox.setCols(33);
+            noteTextbox.setRows(3);
             addOnOkEventToClosePopup(noteTextbox);
             personalTimesheetPopupNote.appendChild(noteTextbox);
             /*

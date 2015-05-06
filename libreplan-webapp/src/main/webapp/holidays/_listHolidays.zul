@@ -1,0 +1,64 @@
+<window id="${arg.top_id}" title="${i18n:_('Holidays List')}">
+    <groupbox closable="false">
+        <caption label="${i18n:_('Filter holidays by')}" />
+        <div align="center">
+
+            <!-- Filter work report lines  @{controller.checkConstraintStartDateLine} -->
+            <hbox>
+                <hbox align="pack">
+	                <!-- Resource -->
+	                <label visible="@{controller.hasRight}" value="${i18n:_('Resource')}"/>
+	                <autocomplete visible="@{controller.hasRight}" 
+	                			  id="filterResource" 
+	                			  buttonVisible="true"
+	                			  finder="ResourceFinder"/> 
+	
+	                <!-- From -->
+	                <label value="${i18n:_('from')}"/>
+	                <datebox id="filterStartDateLine"  value="@{controller.filterFrom}" />
+	
+	                <!-- To -->
+	                <label value="${i18n:_('to')}"/>
+	                <datebox id="filterFinishDateLine" value="@{controller.filterTo}" />
+                </hbox>
+            </hbox>
+        </div>
+      </groupbox>
+        
+    <newdatasortablegrid id="listing" model="@{controller.holidays}" mold="paging"
+        pageSize="10">
+        <columns sizable="true">
+            <newdatasortablecolumn label="${i18n:_('Person')}" />
+            <newdatasortablecolumn label="${i18n:_('From')}" />
+            <newdatasortablecolumn label="${i18n:_('To')}" />
+            <newdatasortablecolumn label="${i18n:_('Note')}" />
+            <newdatasortablecolumn label="${i18n:_('State')}" />
+            <newdatasortablecolumn label="${i18n:_('')}" width="30px" visible="@{controller.hasRight}" />
+            <newdatasortablecolumn label="${i18n:_('')}" width="30px" visible="@{controller.hasRight}" />
+        </columns>
+        <rows>
+            <row self="@{each='holiday'}" value="@{holiday}">
+                <label value="@{holiday.ziadatel.fullName}" />
+                <label value="@{holiday.from}" />
+                <label value="@{holiday.to}" />
+                <label value="@{holiday.note}" />
+                <label value="@{holiday.state}" />
+                <button sclass="icono" image="/common/img/green_check.png"
+                    tooltiptext="${i18n:_('Approve')}"
+                    onClick="controller.approveRequest(self.parent.value)"
+                    width="30px"
+                    visible="@{controller.hasRight}">
+                </button>
+                <button sclass="icono" image="/common/img/red_cross.png"
+                    tooltiptext="${i18n:_('Reject')}"
+                    onClick="controller.rejectRequest(self.parent.value)"
+                    width="30px"
+                    visible="@{controller.hasRight}">
+                </button>
+            </row>
+        </rows>
+    </newdatasortablegrid>
+    <button id="show_create_form" onClick="controller.goToCreateForm();"
+        label="${i18n:_('Create')}" sclass="create-button global-action" >
+    </button>
+</window>

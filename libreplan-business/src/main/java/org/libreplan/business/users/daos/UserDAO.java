@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.criterion.Restrictions;
 import org.libreplan.business.common.daos.GenericDAOHibernate;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
@@ -33,6 +34,7 @@ import org.libreplan.business.scenarios.entities.Scenario;
 import org.libreplan.business.users.entities.OrderAuthorization;
 import org.libreplan.business.users.entities.User;
 import org.libreplan.business.users.entities.UserOrderAuthorization;
+import org.libreplan.business.users.entities.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -176,6 +178,13 @@ public class UserDAO extends GenericDAOHibernate<User, Long>
     @Override
     public List<User> findAll() {
         return list(User.class);
+    }
+    
+    @Override
+    @Transactional(readOnly = true)
+    @SuppressWarnings("unchecked")
+    public List<User> getUsersWithRole(UserRole role) {
+    	return getSession().createQuery("from User u left join fetch u.roles r where r=:role").setParameter("role", role).list();
     }
 
 }

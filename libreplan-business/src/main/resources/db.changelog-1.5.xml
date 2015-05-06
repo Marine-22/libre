@@ -4,7 +4,6 @@
     xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
 
-<!-- 
      <changeSet author="fmorvay" id="create-new-table-holiday">
         <createTable tableName="holiday">
             <column name="id" type="BIGINT">
@@ -13,17 +12,20 @@
             <column name="version" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="dateFrom" type="DATE"/>
-            <column name="dateTo" type="DATE"/>
-
-        
-            <column name="value" type="DECIMAL(19,2)"/>
-            <column name="advance_assignment_id" type="BIGINT"/>
-            <column name="communication_date" type="DATETIME"/>
+            <column name="date_from" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_to" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+   			<column name="state" type="TINYINT"/>
         </createTable>
     </changeSet>
+    <!-- 
+    <changeSet author="fmorvay" id="add-foreign-key-to-table-holiday">
+        <addForeignKeyConstraint baseColumnNames="ziadatel" baseTableName="holiday" constraintName="fk_user_table_2_holiday" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_table" referencesUniqueColumn="true"/>
+    </changeSet>
      -->
-    
      <changeSet author="fmorvay" id="remove-name-constraint-type-of-hours">
         <dropUniqueConstraint tableName="type_of_work_hours" constraintName="type_of_work_hours_name_key" uniqueColumns="name"/>
     </changeSet>
@@ -43,4 +45,30 @@
 	<changeSet author="fmorvay" id="remove-name-constraint-type-of-hours-druhy-pokus">
         <dropUniqueConstraint tableName="type_of_work_hours" constraintName="type_of_work_hours_name_key" uniqueColumns="name"/>
     </changeSet>
+    
+    <changeSet author="fmorvay" id="add-column-ziadatel-and-note-plus-fk-constraint">
+	    <addColumn tableName="type_of_work_hours">
+   			<column name="ziadatel_id" type="BIGINT"/>
+	        <column name="note" type="VARCHAR(512)"/>
+	    </addColumn>
+<!-- 		<addForeignKeyConstraint baseColumnNames="ziadatel" baseTableName="holiday" constraintName="fk_user_table_2_holiday" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_table" referencesUniqueColumn="true"/>  -->
+    </changeSet>
+    
+    <changeSet author="fmorvay" id="drop-shitty-columns">
+		<dropColumn columnName="ziadatel_id" tableName="type_of_work_hours" />
+		<dropColumn columnName="note" tableName="type_of_work_hours" />
+    </changeSet>
+    
+    <changeSet author="fmorvay" id="add-column-ziadatel-to-holiday-and-note-plus-fk-constraint">
+	    <addColumn tableName="holiday">
+   			<column name="ziadatel_id" type="BIGINT"/>
+	        <column name="note" type="VARCHAR(512)"/>
+	    </addColumn>
+<!-- 		<addForeignKeyConstraint baseColumnNames="ziadatel" baseTableName="holiday" constraintName="fk_user_table_2_holiday" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_table" referencesUniqueColumn="true"/>  -->
+    </changeSet>
+    <!--
+    <changeSet author="fmorvay" id="set-database-constraint-fk-ziadatel-on-holiday-table">
+        <addForeignKeyConstraint baseColumnNames="ziadatel_id" baseTableName="holiday" constraintName="fk_user_table_2_holiday" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_table" referencesUniqueColumn="true"/>
+    </changeSet>
+    -->
 </databaseChangeLog>

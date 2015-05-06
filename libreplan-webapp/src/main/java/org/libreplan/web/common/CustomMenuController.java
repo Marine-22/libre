@@ -524,6 +524,8 @@ public class CustomMenuController extends Div implements IMenuItemsRegister {
                 "/myaccount/settings.zul", ""));
         personalAreaItems.add(subItem(_("Change Password"),
                 "/myaccount/changePassword.zul", ""));
+        personalAreaItems.add(subItem(_("Holidays"), 
+        		"/holidays/holidays.zul", ""));
         topItem(_("Personal area"), "/myaccount/userDashboard.zul", "",
                 personalAreaItems);
     }

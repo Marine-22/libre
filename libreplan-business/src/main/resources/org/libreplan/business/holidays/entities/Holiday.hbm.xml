@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.libreplan.business.holidays.entities" default-access="field">
+
+<!-- ExternalCompany -->
+<class name="Holiday" table="holiday">
+    <id name="id" type="long" access="property">
+        <generator class="hilo">
+            <param name="max_lo">100</param>
+        </generator>
+    </id>
+    <version name="version" access="property" type="long" />
+
+    <property name="from" access="field" column="date_from"/>
+    <property name="to" access="field" column="date_to"/>
+    <property name="note" access="field" column="note"/>
+    
+    <property name="state" access="field" column="state">
+        <type name="org.hibernate.type.EnumType">
+            <param name="enumClass">
+                org.libreplan.business.holidays.entities.HolidayState
+            </param>
+        </type>
+    </property>
+    
+    <many-to-one lazy="false" name="ziadatel" class="org.libreplan.business.users.entities.User" column="ziadatel_id" index="idx_ziadatel_on_holiday" />
+        
+</class>
+</hibernate-mapping>

@@ -18,11 +18,14 @@
  */
 package org.libreplan.web;
 
+import java.util.List;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.libreplan.business.common.Registry;
 import org.libreplan.business.common.exceptions.InstanceNotFoundException;
 import org.libreplan.business.users.entities.User;
+import org.libreplan.business.users.entities.UserRole;
 import org.libreplan.web.security.SecurityUtils;
 import org.libreplan.web.users.services.CustomUser;
 
@@ -53,5 +56,9 @@ public class UserUtil {
         }
         return null;
     }
+
+	public static List<User> getUsersWithRole(UserRole role) {
+		return Registry.getUserDAO().getUsersWithRole(role);
+	}
 
 }

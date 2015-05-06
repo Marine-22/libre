@@ -29,6 +29,7 @@ import org.libreplan.business.resources.entities.Worker;
 import org.libreplan.business.scenarios.entities.Scenario;
 import org.libreplan.business.users.entities.OrderAuthorization;
 import org.libreplan.business.users.entities.User;
+import org.libreplan.business.users.entities.UserRole;
 
 /**
  * DAO interface for the <code>User</code> entity.
@@ -101,5 +102,7 @@ public interface IUserDAO extends IGenericDAO<User, Long>{
     void remove(User user) throws InstanceNotFoundException;
 
     List<User> findAll();
+
+	public List<User> getUsersWithRole(UserRole role);
 
 }

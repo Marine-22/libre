@@ -45,6 +45,21 @@
 
     <bean id="criterionMultipleFiltersFinder" class="org.libreplan.web.common.components.finders.CriterionMultipleFiltersFinder" scope="singleton"/>
 
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host"><value>smtp.gmail.com</value></property>
+        <property name="port"><value>587</value></property>
+        <property name="protocol"><value>smtp</value></property>
+        <property name="username"><value>service@iquap.com</value></property>
+        <property name="password"><value>Service1553</value></property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">true</prop>
+                <prop key="mail.smtp.starttls.enable">true</prop>
+                <prop key="mail.smtp.quitwait">false</prop>
+            </props>
+        </property>
+    </bean>
+    
     <bean id="scenarioManager"
         class="org.libreplan.web.scenarios.CurrentUserScenarioAwareManager"
         scope="singleton"/>
