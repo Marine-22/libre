@@ -128,14 +128,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 			}
 			LOG.info("Pouzivatelia na poslanie mailu: " + to);
 			
-			SimpleMailMessage smm = new SimpleMailMessage();
-			smm.setTo(to.toArray(new String[0]));
-			smm.setSubject("Nová žiadosť o dovolenku od " + h.getZiadatel().getFullName());
-			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-			smm.setText("Vážený schvalovateľ dovoleniek!\n\nPracovník " + h.getZiadatel().getFullName() +
-					" požiadal o dovolenku v termíne od " + sdf.format(h.getFrom()) + " do " + sdf.format(h.getTo())
-					+ ".\n\nProsím schválte/zamietnite túto požiadavku:\nhttp://external.iquap.com/libreplan-webapp/holidays/holidays.zul");
-			mailSender.send(smm);
+			sendMailCreated(to.toArray(new String[0]), h.getZiadatel().getFullName(), h.getFrom(), h.getTo());
 		}
 	}
 
@@ -173,6 +166,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 					_("Confirm"), Messagebox.OK | Messagebox.CANCEL,
 					Messagebox.QUESTION) == Messagebox.OK){
 				holidaysModel.approveHoliday(h);
+				sendMailApproved(h.getZiadatel().getEmail(), h.getFrom(), h.getTo());
 				showListWindow();
 			}
 		}catch(InterruptedException ex){
@@ -187,6 +181,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 					_("Confirm"), Messagebox.OK | Messagebox.CANCEL,
 					Messagebox.QUESTION) == Messagebox.OK){
 				holidaysModel.rejectHoliday(h);
+				sendMailRejected(h.getZiadatel().getEmail(), h.getFrom(), h.getTo());
 				showListWindow();
 			}
 		}catch(InterruptedException ex){
@@ -198,6 +193,57 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 	public void onEvent(Event evt) throws Exception {
 		super.onEvent(evt);
 		showListWindow();
+	}
+	
+	private void sendMailCreated(String[] recip, String ziadatel, Date from, Date to){
+		SimpleMailMessage smm = new SimpleMailMessage();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		smm.setTo(recip);
+		smm.setSubject("Nová žiadosť o dovolenku od " + ziadatel);
+		smm.setText("Vážený schvalovateľ dovoleniek!\n\nPracovník " + ziadatel +
+				" požiadal o dovolenku v termíne od " + sdf.format(from) + " do " + sdf.format(to)
+				+ ".\n\nProsím schválte/zamietnite túto požiadavku:\nhttp://external.iquap.com/libreplan/holidays/holidays.zul");
+		mailSender.send(smm);
+	}
+
+	private void sendMailApproved(String recip, Date from, Date to){
+		SimpleMailMessage smm = new SimpleMailMessage();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		StringBuffer sb = new StringBuffer();
+		
+
+		smm.setTo(recip);
+		smm.setSubject("Oznam o schválení dovolenky");
+		
+		sb.append("Vážený žiadateľ o dovolenku,\n\nVaša dovolenka v termíne od ");
+		sb.append(sdf.format(from));
+		sb.append(" do ");
+		sb.append(sdf.format(to));
+		sb.append(" bola schválená.");
+		sb.append("\n\n Prehľad dovoleniek nájdete na stránke: http://external.iquap.com/libreplan/holidays/holidays.zul");
+		smm.setText(sb.toString());
+		
+		mailSender.send(smm);
+	}
+
+	private void sendMailRejected(String recip, Date from, Date to){
+		SimpleMailMessage smm = new SimpleMailMessage();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		StringBuffer sb = new StringBuffer();
+		
+
+		smm.setTo(recip);
+		smm.setSubject("Oznam o zamietnutí dovolenky");
+		
+		sb.append("Vážený žiadateľ o dovolenku,\n\nVaša dovolenka v termíne od ");
+		sb.append(sdf.format(from));
+		sb.append(" do ");
+		sb.append(sdf.format(to));
+		sb.append(" bola zamietnutá.");
+		sb.append("\n\n Prehľad dovoleniek nájdete na stránke: http://external.iquap.com/libreplan/holidays/holidays.zul");
+		smm.setText(sb.toString());
+		
+		mailSender.send(smm);
 	}
 	
 }
