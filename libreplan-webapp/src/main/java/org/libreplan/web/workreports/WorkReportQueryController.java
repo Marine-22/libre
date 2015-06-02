@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -272,7 +273,14 @@ public class WorkReportQueryController extends GenericForwardComposer {
     
     private void fillData(Sheet sheet){
     	int index = 10;
-    	for(WorkReportLine wrl : filterWorkReportLines){
+    	List<WorkReportLine> sorted = new ArrayList<WorkReportLine>(filterWorkReportLines);
+    	Collections.sort(sorted, new Comparator<WorkReportLine>() {
+    		@Override
+    		public int compare(WorkReportLine o1, WorkReportLine o2) {
+    			return o1.getDate().compareTo(o2.getDate());
+    		}
+		});
+    	for(WorkReportLine wrl : sorted){
     		createRow(sheet.createRow(index++), wrl);
     	}
     }
