@@ -1,0 +1,72 @@
+<window id="${arg.top_id}" title="${i18n:_('Travel Claim List')}">
+    <groupbox closable="false">
+        <caption label="${i18n:_('Filter travel claims by:')}" />
+        <div align="center">
+
+            <!-- Filter work report lines  @{controller.checkConstraintStartDateLine} -->
+            <hbox>
+                <hbox align="pack">
+	                <!-- Resource -->
+	                <label visible="@{controller.canSeeAll}" value="${i18n:_('Resource')}"/>
+	                <autocomplete visible="@{controller.canSeeAll}" 
+	                			  id="filterResource" 
+	                			  buttonVisible="true"
+	                			  finder="ResourceFinder"
+	                			  onChange="@{controller.onChange}" /> 
+
+	                <!-- From -->
+	                <label value="${i18n:_('from')}"/>
+	                <datebox id="filterStartDateLine"  value="@{controller.filterFrom}" />
+	
+	                <!-- To -->
+	                <label value="${i18n:_('to')}"/>
+	                <datebox id="filterFinishDateLine" value="@{controller.filterTo}" />
+                </hbox>
+            </hbox>
+        </div>
+      </groupbox>
+        
+    <newdatasortablegrid id="listing" model="@{controller.cestovnePrikazy}" mold="paging"
+        pageSize="15"
+        sclass="clickable-rows">
+        <columns sizable="true">
+            <newdatasortablecolumn label="${i18n:_('Person')}" />
+            <newdatasortablecolumn label="${i18n:_('From')}" />
+            <newdatasortablecolumn label="${i18n:_('To')}" />
+            <newdatasortablecolumn label="${i18n:_('Travel purpose')}" />
+            <newdatasortablecolumn label="${i18n:_('Other passengers')}" />
+            <newdatasortablecolumn label="${i18n:_('Transport by')}" />
+            <newdatasortablecolumn label="${i18n:_('State')}" />
+            <newdatasortablecolumn label="${i18n:_('')}" width="30px" visible="@{controller.canDecide}" />
+            <newdatasortablecolumn label="${i18n:_('')}" width="30px" visible="@{controller.canDecide}" />
+        </columns>
+        <rows>
+            <row self="@{each='cestovnyPrikaz'}" 
+            		value="@{cestovnyPrikaz}" 
+            		onClick="controller.goToEditForm(self.value)">
+                <label value="@{cestovnyPrikaz.ziadatel.fullName}" />
+                <label value="@{cestovnyPrikaz.fullFrom}" />
+                <label value="@{cestovnyPrikaz.fullTo}" />
+                <label value="@{cestovnyPrikaz.ucelCesty}" />
+                <label value="@{cestovnyPrikaz.spolucestujuci}" />
+                <label value="@{cestovnyPrikaz.prostriedok.name}" />
+                <label value="@{cestovnyPrikaz.stav}" />
+                <button sclass="icono" image="/common/img/green_check.png"
+                    tooltiptext="${i18n:_('Approve')}"
+                    onClick="controller.approveRequest(self.parent.value)"
+                    width="30px"
+                    visible="@{controller.hasRight}">
+                </button>
+                <button sclass="icono" image="/common/img/red_cross.png"
+                    tooltiptext="${i18n:_('Reject')}"
+                    onClick="controller.rejectRequest(self.parent.value)"
+                    width="30px"
+                    visible="@{controller.hasRight}">
+                </button>
+            </row>
+        </rows>
+    </newdatasortablegrid>
+    <button id="show_create_form" onClick="controller.goToCreateForm();"
+        label="${i18n:_('Create')}" sclass="create-button global-action" >
+    </button>
+</window>

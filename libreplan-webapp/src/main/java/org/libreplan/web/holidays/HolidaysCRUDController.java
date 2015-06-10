@@ -2,8 +2,6 @@ package org.libreplan.web.holidays;
 
 import static org.libreplan.web.I18nHelper._;
 
-import java.net.URL;
-import java.security.CodeSource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -25,7 +23,6 @@ import org.libreplan.web.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -45,7 +42,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 	@Autowired
 	private MailSender mailSender;
 
-	@SuppressWarnings("unused")
+	//@SuppressWarnings("unused")
 	private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(HolidaysCRUDController.class);
 	
     @Override
@@ -135,7 +132,6 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 	@Override
 	protected Holiday getEntityBeingEdited() {
 		return holidaysModel.getHoliday();
-		
 	}
 
 	@Override
@@ -196,6 +192,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 	}
 	
 	private void sendMailCreated(String[] recip, String ziadatel, Date from, Date to){
+		if(recip == null || recip.length == 0) return;
 		SimpleMailMessage smm = new SimpleMailMessage();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		smm.setTo(recip);
@@ -207,6 +204,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 	}
 
 	private void sendMailApproved(String recip, Date from, Date to){
+		if(recip == null || "".equals(recip)) return;
 		SimpleMailMessage smm = new SimpleMailMessage();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		StringBuffer sb = new StringBuffer();
@@ -227,6 +225,7 @@ public class HolidaysCRUDController extends BaseCRUDController<Holiday> implemen
 	}
 
 	private void sendMailRejected(String recip, Date from, Date to){
+		if(recip == null || "".equals(recip)) return;
 		SimpleMailMessage smm = new SimpleMailMessage();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		StringBuffer sb = new StringBuffer();

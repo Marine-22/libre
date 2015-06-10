@@ -70,5 +70,66 @@
     <changeSet author="fmorvay" id="set-database-constraint-fk-ziadatel-on-holiday-table">
         <addForeignKeyConstraint baseColumnNames="ziadatel_id" baseTableName="holiday" constraintName="fk_user_table_2_holiday" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_table" referencesUniqueColumn="true"/>
     </changeSet>
+    
+    private User ziadatel;
+	private String zaciatokMiesto;
+	private String koniecMiesto;
+	private Date zaciatokDatum;
+	private Date koniecDatum;
+	private String ucelCesty;
+	private String spolucestujuci;
+	private CestovnyProstriedok prostriedok;
+	private CestovnyPrikazState stav;
     -->
+    
+    
+      <changeSet author="fmorvay" id="create-new-table-cestovny-prikaz">
+        <createTable tableName="cestovny_prikaz">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cestovny_prikaz_pkey"/>
+            </column>
+            <column name="version" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="ziadatel_id" type="BIGINT">
+   				<constraints nullable="false"/>
+   			</column>
+	        <column name="zaciatok_miesto" type="VARCHAR(128)">
+   				<constraints nullable="false"/>
+   			</column>
+	        <column name="koniec_miesto" type="VARCHAR(128)">
+   				<constraints nullable="false"/>
+   			</column>
+            
+            <column name="zaciatok_datum" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+            <column name="koniec_datum" type="DATE">
+                <constraints nullable="false"/>
+            </column>
+	        <column name="ucel_cesty" type="VARCHAR(256)">
+   				<constraints nullable="false"/>
+   			</column>
+	        <column name="spolucestujuci" type="VARCHAR(256)"/>
+   			<column name="prostriedok" type="TINYINT">
+   				<constraints nullable="false"/>
+   			</column>
+   			<column name="state" type="TINYINT">
+   				<constraints nullable="false"/>
+   			</column>
+        </createTable>
+        
+        <addForeignKeyConstraint baseColumnNames="ziadatel_id" baseTableName="cestovny_prikaz" constraintName="id_ziadatel_cestovny_prikaz_fkey" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="user_table" referencesUniqueColumn="false"/>
+    </changeSet>
+    <changeSet author="fmorvay" id="change-table-cestovny-prikaz-datetime-columns">
+    	<modifyDataType columnName="zaciatok_datum" newDataType="DATETIME" tableName="cestovny_prikaz"/>
+    	<modifyDataType columnName="koniec_datum" newDataType="DATETIME" tableName="cestovny_prikaz"/>
+    </changeSet>
+    <changeSet author="fmorvay" id="change-table-cestovny-prikaz-integers-columns">
+    	<modifyDataType columnName="prostriedok" newDataType="INT" tableName="cestovny_prikaz"/>
+    	<modifyDataType columnName="state" newDataType="INT" tableName="cestovny_prikaz"/>
+    
+    </changeSet>
+    
+    
 </databaseChangeLog>

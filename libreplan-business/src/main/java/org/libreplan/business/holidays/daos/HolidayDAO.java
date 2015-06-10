@@ -24,10 +24,13 @@ public class HolidayDAO  extends GenericDAOHibernate<Holiday, Long> implements I
 	public List<Holiday> list(Date filterFrom, Date filterTo, User filterUser) {
 		Session session = getSession();
 		Query q = session.createQuery(
-				"from Holiday h where h.from < :dateTo and h.to > :dateFrom" + 
-				(filterUser == null ? "" : " and h.ziadatel = :ziadatel"))
-				.setParameter("dateTo", filterTo)
-				.setParameter("dateFrom", filterFrom);
+				"from Holiday h where 1=1" + 
+				(filterFrom == null ? "" : " and h.to > :dateFrom") + 
+				(filterTo == null ? "" : " and h.from < :dateTo") + 
+				(filterUser == null ? "" : " and h.ziadatel = :ziadatel"));
+
+		q = (filterFrom == null ? q : q.setParameter("dateFrom", filterFrom));
+		q = (filterTo == null ? q : q.setParameter("dateTo", filterTo));
 		q = (filterUser == null ? q : q.setParameter("ziadatel", filterUser));
 		return (List<Holiday>) q.list();
 	}

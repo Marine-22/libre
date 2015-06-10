@@ -1,0 +1,19 @@
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+<?page title="${i18n:_('LibrePlan: Holidays')}" id="work_report_admin"?>
+<?init class="org.zkoss.zk.ui.util.Composition" arg0="/common/layout/template.zul"?>
+<?link rel="shortcut icon" href="/common/img/favicon.ico" type="image/x-icon"?>
+<?link rel="stylesheet" type="text/css" href="/common/css/libreplan.css"?>
+<?link rel="stylesheet" type="text/css" href="/common/css/libreplan_zk.css"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
+<?component name="list" inline="true" macroURI="_listCestaky.zul"?>
+<?component name="edition" inline="true" macroURI="_editCestaky.zul"?>
+<zk>
+    <window self="@{define(content)}"
+        apply="org.libreplan.web.cestaky.CestovnyPrikazCRUDController">
+        <vbox id="messagesContainer" width="100%"></vbox>
+
+        <list top_id="listWindow" />
+        <edition top_id="editWindow" />
+    </window>
+</zk>

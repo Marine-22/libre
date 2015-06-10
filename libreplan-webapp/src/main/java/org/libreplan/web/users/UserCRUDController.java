@@ -490,5 +490,4 @@ public class UserCRUDController extends BaseCRUDController<User> implements
                     .equals(UserAuthenticationType.DATABASE));
         }
     }
-
 }

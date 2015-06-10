@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.libreplan.business.cestaky.entities" default-access="field">
+
+<!-- ExternalCompany -->
+<class name="CestovnyPrikaz" table="cestovny_prikaz">
+    <id name="id" type="long" access="property">
+        <generator class="hilo">
+            <param name="max_lo">100</param>
+        </generator>
+    </id>
+    <version name="version" access="property" type="long" />
+    
+    <property name="zaciatokMiesto" access="field" column="zaciatok_miesto"/>
+    <property name="koniecMiesto" access="field" column="koniec_miesto"/>
+
+    <property name="zaciatokDatum" access="field" column="zaciatok_datum"/>
+    <property name="koniecDatum" access="field" column="koniec_datum"/>
+    
+    <property name="ucelCesty" access="field" column="ucel_cesty"/>
+    <property name="spolucestujuci" access="field" column="spolucestujuci"/>
+    
+    <property name="prostriedok" access="field" column="prostriedok">
+        <type name="org.hibernate.type.EnumType">
+            <param name="enumClass">
+                org.libreplan.business.cestaky.entities.CestovnyProstriedok
+            </param>
+        </type>
+    </property>
+        
+    <property name="stav" access="field" column="state">
+        <type name="org.hibernate.type.EnumType">
+            <param name="enumClass">
+                org.libreplan.business.cestaky.entities.CestovnyPrikazState
+            </param>
+        </type>
+    </property>
+    
+    <many-to-one lazy="false" name="ziadatel" class="org.libreplan.business.users.entities.User" column="ziadatel_id" index="idx_ziadatel_on_cestovny_prikaz" />
+        
+</class>
+</hibernate-mapping>

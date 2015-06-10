@@ -23,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 @OnConcurrentModification(goToPage = "/holidays/holidays.zul")
 public class HolidaysModel implements IHolidaysModel{
 	
+	@SuppressWarnings("unused")
 	private static final org.apache.commons.logging.Log LOG = LogFactory
 	            .getLog(HolidaysModel.class);
 	   

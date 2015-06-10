@@ -82,7 +82,9 @@ public enum UserRole {
     ROLE_TASK_SCHEDULING_STATUS_IN_PROJECT_REPORT(_("Task Scheduling Status In Project Report")),
     ROLE_MATERIALS_NEED_AT_DATE_REPORT(_("Materials Needed At Date Report")),
     ROLE_PROJECT_STATUS_REPORT(_("Project Status Report")),
-    ROLE_HOLIDAY_APPROVING(_("Holiday request approving"));
+    ROLE_HOLIDAY_APPROVING(_("Holiday request approving")),
+    ROLE_CAN_SEE_ALL_TRAVEL_CLAIMS(_("See all travel claims")),
+    ROLE_CAN_DECIDE_TRAVEL_CLAIMS(_("Travel claims approving"));
 
     private final String displayName;
 

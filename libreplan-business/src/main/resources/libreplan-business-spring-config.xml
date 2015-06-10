@@ -80,6 +80,9 @@
                     org/libreplan/business/holidays/entities/Holiday.hbm.xml
                 </value>
                 <value>
+                    org/libreplan/business/cestaky/entities/CestovnePrikazy.hbm.xml
+                </value>
+                <value>
                     org/libreplan/business/planner/entities/AdvanceConsolidations.hbm.xml
                 </value>
                 <value>

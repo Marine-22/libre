@@ -28,7 +28,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.validation.constraints.AssertTrue;
+
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.libreplan.business.cestaky.entities.CestovnyPrikaz;
 import org.libreplan.business.common.BaseEntity;
 import org.libreplan.business.common.IHumanIdentifiable;
 import org.libreplan.business.common.IOnTransaction;
@@ -55,6 +58,7 @@ import org.libreplan.business.users.daos.IUserDAO;
  */
 public class User extends BaseEntity implements IHumanIdentifiable{
 
+	private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(User.class);
     private String loginName = "";
 
     private String password = "";
@@ -350,6 +354,7 @@ public class User extends BaseEntity implements IHumanIdentifiable{
     }
 
     public String getFullName() {
+    	LOG.info("Get full name: " + firstName + " " + lastName);
         return firstName + " " + lastName;
     }
 

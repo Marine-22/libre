@@ -1,0 +1,73 @@
+<?taglib uri="/WEB-INF/tld/i18n.tld" prefix="i18n" ?>
+
+<window id="${arg.top_id}">
+    <caption id="caption" sclass="caption-title" />
+    
+        <tabbox>
+        <tabs>
+            <tab label="${i18n:_('New travel claim request')}"></tab>
+        </tabs>
+        <tabpanels>
+            <tabpanel>
+                <vbox width="100%">
+                    <grid fixedLayout="true">
+                        <columns>
+                            <column width="200px" />
+                            <column />
+                        </columns>
+                        <rows>
+                            <row>
+                                <label value="${i18n:_('From')}:" />
+                                <hbox>
+	                                <textbox id="startTravelClaimPlace" width="200px"
+	                        			value="@{controller.cestovnyPrikaz.zaciatokMiesto}"
+	                                    constraint="no empty:${i18n:_('cannot be empty')} "/>
+	                                
+	                                <label value="${i18n:_('when')}" width="50px" />
+	                                <datebox id="startTravelClaimDateTime" width="200px" format="long+medium" value="@{controller.cestovnyPrikaz.zaciatokDatum}" constraint="no empty:${i18n:_('cannot be empty')}" />
+	                                 
+	                                                                  
+								</hbox>	
+                            </row>
+                            <row>
+                                <label value="${i18n:_('To')}:" />
+                                <hbox>
+                                <textbox id="finishTravelClaimPlace" width="200px"
+                        			value="@{controller.cestovnyPrikaz.koniecMiesto}"
+                                    constraint="no empty:${i18n:_('cannot be empty')} "/>
+                                    <label value="${i18n:_('when')}" width="50px" />
+                                    <datebox id="finishTravelClaimDateTime" format="long+medium" value="@{controller.cestovnyPrikaz.koniecDatum}" width="200px" constraint="no empty:${i18n:_('cannot be empty')}" />
+								</hbox>	
+                            </row>
+                            <row>
+                                <label value="${i18n:_('Travel purpose')}:" />
+                                <textbox id="travelPurposeTravelClaim" width="450px"
+                        			value="@{controller.cestovnyPrikaz.ucelCesty}"/>
+                            </row>
+							<row>
+                                <label value="${i18n:_('Other passengers')}:" />
+                                <textbox id="otherPassangersTravelClaim" width="450px"
+                        			value="@{controller.cestovnyPrikaz.spolucestujuci}"/>
+                            </row>
+                            <row>
+                                <label value="${i18n:_('Transport by')}:" />
+                                
+                                <combobox id="transportTypeTravelClaim" 
+                                		  autodrop="true" 
+                                		  onChange="controller.setTransportType(self.selectedItem)" />
+                                
+	                        </row>
+                        </rows>
+                    </grid>
+                </vbox>
+            </tabpanel>
+        </tabpanels>
+    </tabbox>
+
+    <button onClick="controller.saveAndExit();" autodisable="self"
+        label="${i18n:_('Save')}" sclass="save-button global-action" />
+    <button onClick="controller.saveAndContinue();"
+        label="${i18n:_('Save &amp; Continue')}" sclass="saveandcontinue-button global-action" />
+    <button onClick="controller.cancelForm();"
+        label="${i18n:_('Cancel')}" sclass="cancel-button global-action" />
+</window>
