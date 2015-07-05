@@ -204,6 +204,14 @@ public class WorkReportQueryController extends GenericForwardComposer {
             createPredicateLines(Collections.singletonList(selectedOrder));
         }
         filterByPredicateLines();
+        
+
+        LOG.info("onApplyFilterWorkReportLines: ");
+        for(WorkReportLine wrl : workReportLines){
+            LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
+        }
+        
+        
         updateSummary();
     }
     

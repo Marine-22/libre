@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.libreplan.business.common.IntegrationEntity;
 import org.libreplan.business.common.daos.IConfigurationDAO;
@@ -122,6 +123,7 @@ public class WorkReportModel extends IntegrationEntityModel implements
 
     private Set<WorkReportLine> deletedWorkReportLinesSet = new HashSet<WorkReportLine>();
 
+    private static final org.apache.commons.logging.Log LOG = LogFactory.getLog(WorkReportModel.class);
     @Override
     public WorkReport getWorkReport() {
         return workReport;
@@ -381,6 +383,10 @@ public class WorkReportModel extends IntegrationEntityModel implements
                 forceLoadPrincipalDataWorkReportLines(workReportLine);
                 listWorkReportLine.add(workReportLine);
             }
+        }
+        LOG.info("getAllWorkReportLines: ");
+        for(WorkReportLine wrl : listWorkReportLine){
+            LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
         }
         return listWorkReportLine;
     }
