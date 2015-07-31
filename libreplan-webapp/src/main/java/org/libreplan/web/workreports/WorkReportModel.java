@@ -397,7 +397,7 @@ public class WorkReportModel extends IntegrationEntityModel implements
         for (WorkReportLine workReportLine : listWorkReportLine) {
             //LOG.info("workReportLine: " + workReportLine);
             if (predicate.accepts(workReportLine)) {
-            	LOG.info("Akceptuje, pridava: " + workReportLine);
+//            	LOG.info("Akceptuje, pridava: " + workReportLine);
                 result.add(workReportLine);
             }
         }

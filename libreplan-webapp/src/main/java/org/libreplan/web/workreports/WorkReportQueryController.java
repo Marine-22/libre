@@ -206,10 +206,10 @@ public class WorkReportQueryController extends GenericForwardComposer {
         filterByPredicateLines();
         
 
-        LOG.info("onApplyFilterWorkReportLines: ");
-        for(WorkReportLine wrl : filterWorkReportLines){
-            LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
-        }
+//        LOG.info("onApplyFilterWorkReportLines: ");
+//        for(WorkReportLine wrl : filterWorkReportLines){
+//            LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
+//        }
         
         
         updateSummary();
@@ -328,17 +328,26 @@ public class WorkReportQueryController extends GenericForwardComposer {
 
     private void filterByPredicateLines() {
         filterWorkReportLines.clear();
-    	LOG.info("Uvod " + filterWorkReportLines);
-        int i = 0;
+        List<WorkReportLine> tmpList = new ArrayList<WorkReportLine>();
+//    	LOG.info("Uvod " + filterWorkReportLines);
+//        int i = 0;
         for (IPredicate each : predicates) {
         	
-        	LOG.info("Riesim " + i++ + ". kolo: " + filterWorkReportLines);
-        	LOG.info("Predicate " + i + ". kolo: " + each.getClass().getName());
+//        	LOG.info("Riesim " + i++ + ". kolo: " + filterWorkReportLines);
+//        	LOG.info("Predicate " + i + ". kolo: " + each.getClass().getName());
         	
-        	filterWorkReportLines.addAll(workReportModel
+        	tmpList.addAll(workReportModel
                     .getFilterWorkReportLines(each));
             
         }
+        // neviem preco vznikaju duplicity, duplicitne ID odstranim
+        Set<Long> ids = new HashSet<Long>();
+        for(WorkReportLine wrl : tmpList){
+        	if(ids.add(wrl.getId())){
+        		filterWorkReportLines.add(wrl);
+        	}
+        }
+        
         gridListQuery.setModel(new SimpleListModel(filterWorkReportLines
                 .toArray()));
         gridListQuery.invalidate();
