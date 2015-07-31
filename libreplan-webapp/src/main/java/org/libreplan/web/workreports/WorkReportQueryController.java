@@ -207,7 +207,7 @@ public class WorkReportQueryController extends GenericForwardComposer {
         
 
         LOG.info("onApplyFilterWorkReportLines: ");
-        for(WorkReportLine wrl : workReportLines){
+        for(WorkReportLine wrl : filterWorkReportLines){
             LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
         }
         
@@ -328,9 +328,12 @@ public class WorkReportQueryController extends GenericForwardComposer {
 
     private void filterByPredicateLines() {
         filterWorkReportLines.clear();
+        int i = 0;
         for (IPredicate each : predicates) {
-            filterWorkReportLines.addAll(workReportModel
+        	LOG.info("Riesim " + i + ". kolo: " + filterWorkReportLines);
+        	filterWorkReportLines.addAll(workReportModel
                     .getFilterWorkReportLines(each));
+            
         }
         gridListQuery.setModel(new SimpleListModel(filterWorkReportLines
                 .toArray()));
