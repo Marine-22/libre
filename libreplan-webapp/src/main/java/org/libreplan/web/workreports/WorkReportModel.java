@@ -384,10 +384,10 @@ public class WorkReportModel extends IntegrationEntityModel implements
                 listWorkReportLine.add(workReportLine);
             }
         }
-        LOG.info("getAllWorkReportLines: ");
-        for(WorkReportLine wrl : listWorkReportLine){
-            LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
-        }
+//        LOG.info("getAllWorkReportLines: ");
+//        for(WorkReportLine wrl : listWorkReportLine){
+//            LOG.info("id: " + wrl.getId() + " eff: " + wrl.getEffort() + " date: " + wrl.getDate() + " note: " + wrl.getNote());
+//        }
         return listWorkReportLine;
     }
 
@@ -395,9 +395,9 @@ public class WorkReportModel extends IntegrationEntityModel implements
     public List<WorkReportLine> getFilterWorkReportLines(IPredicate predicate) {
         List<WorkReportLine> result = new ArrayList<WorkReportLine>();
         for (WorkReportLine workReportLine : listWorkReportLine) {
-            LOG.info("workReportLine: " + workReportLine);
+            //LOG.info("workReportLine: " + workReportLine);
             if (predicate.accepts(workReportLine)) {
-            	LOG.info("Akceptuje, pridava");
+            	LOG.info("Akceptuje, pridava: " + workReportLine);
                 result.add(workReportLine);
             }
         }

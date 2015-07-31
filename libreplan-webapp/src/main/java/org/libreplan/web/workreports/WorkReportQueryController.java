@@ -332,8 +332,8 @@ public class WorkReportQueryController extends GenericForwardComposer {
         int i = 0;
         for (IPredicate each : predicates) {
         	
-        	LOG.info("Riesim " + i + ". kolo: " + filterWorkReportLines);
-        	LOG.info("Predicate " + i + ". kolo: " + each);
+        	LOG.info("Riesim " + i++ + ". kolo: " + filterWorkReportLines);
+        	LOG.info("Predicate " + i + ". kolo: " + each.getClass().getName());
         	
         	filterWorkReportLines.addAll(workReportModel
                     .getFilterWorkReportLines(each));

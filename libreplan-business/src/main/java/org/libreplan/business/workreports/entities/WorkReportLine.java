@@ -591,7 +591,7 @@ public class WorkReportLine extends IntegrationEntity implements
     }
 
     public String toString(){
-    	return "WorkReportLine[effort="+effort+"; date="+date+"]";
+    	return "WorkReportLine[id="+getId()+"effort="+effort+"; date="+date+"note="+getNote()+"]";
     }
 
 	public void setNote(String value) {
