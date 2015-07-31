@@ -395,7 +395,9 @@ public class WorkReportModel extends IntegrationEntityModel implements
     public List<WorkReportLine> getFilterWorkReportLines(IPredicate predicate) {
         List<WorkReportLine> result = new ArrayList<WorkReportLine>();
         for (WorkReportLine workReportLine : listWorkReportLine) {
+            LOG.info("workReportLine: " + workReportLine);
             if (predicate.accepts(workReportLine)) {
+            	LOG.info("Akceptuje, pridava");
                 result.add(workReportLine);
             }
         }
