@@ -234,7 +234,10 @@ public class WorkReportQueryController extends GenericForwardComposer {
         //try {
     	//InputStream is = WorkReportQueryController.class.getResourceAsStream(TIME_SHEET_NAME);
     	//Workbook wb = new XSSFWorkbook(is);
-    	Workbook wb = new XSSFWorkbook("/var/libreplan/TimeSheet");
+    	
+        InputStream is = new FileInputStream(new File("/var/libreplan/TimeSheet"));
+        Workbook wb = new XSSFWorkbook(is);
+    	
     	Sheet sheet = wb.getSheetAt(0);
     	fillFilter(sheet, selectedOrder);
     	int row = fillData(sheet);
