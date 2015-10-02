@@ -59,7 +59,7 @@ public class Holiday extends BaseEntity implements IHumanIdentifiable, Comparabl
 	@Override
 	public String getHumanId() {
 		if(from == null || to == null) return "NEW";
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		return "from " + sdf.format(from) + " to " + sdf.format(to);
 	}
 	
@@ -73,7 +73,7 @@ public class Holiday extends BaseEntity implements IHumanIdentifiable, Comparabl
 	}
 	
 	public String getInfoText(){
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.mm.yyyy");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		return ziadatel.getFullName() + " " + sdf.format(from) + "-" + sdf.format(to);
 	}
 

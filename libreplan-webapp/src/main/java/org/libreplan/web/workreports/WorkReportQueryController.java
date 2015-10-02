@@ -25,7 +25,9 @@ import static org.libreplan.web.I18nHelper._;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,6 +38,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import javax.activation.MimetypesFileTypeMap;
 
@@ -234,19 +237,27 @@ public class WorkReportQueryController extends GenericForwardComposer {
     	Workbook wb = new XSSFWorkbook("/var/libreplan/TimeSheet");
     	Sheet sheet = wb.getSheetAt(0);
     	fillFilter(sheet, selectedOrder);
-    	fillData(sheet);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        wb.write(baos);
-        wb.close();
-       // is.close();
-        byte[] data = baos.toByteArray();
-        baos.close();
-        InputStream isFinal = new ByteArrayInputStream(data);
-        Filedownload.save(isFinal, new MimetypesFileTypeMap().getContentType(TIME_SHEET_NAME), TIME_SHEET_NAME);
+    	int row = fillData(sheet);
+    	Row r = sheet.createRow(row++);
+    	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
+    	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
+    	r = sheet.createRow(row);
+    	Resource resource = getSelectedResource();
+    	r.createCell(1).setCellValue(resource.getName());
+    	r.createCell(3).setCellValue("Peter Kováč");
+    	
+    	String uuid = UUID.randomUUID().toString();
+    	
+		FileOutputStream fos = new FileOutputStream("/var/libreplan/" + uuid);
+		wb.write(fos);
+		wb.close();
+		fos.close();
+		File fTmp = new File("/var/libreplan/" + uuid);
+        InputStream tsFinal = new FileInputStream(fTmp);
+        Filedownload.save(tsFinal, new MimetypesFileTypeMap().getContentType(TIME_SHEET_NAME), TIME_SHEET_NAME);
+        tsFinal.close();
+        fTmp.delete();
 
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
         
     }
 
@@ -279,7 +290,7 @@ public class WorkReportQueryController extends GenericForwardComposer {
     	sheet.getRow(5).getCell(5).setCellValue(getValueOrDefault(finishDate, "All"));
     }
     
-    private void fillData(Sheet sheet){
+    private int fillData(Sheet sheet){
     	int index = 10;
     	List<WorkReportLine> sorted = new ArrayList<WorkReportLine>(filterWorkReportLines);
     	Collections.sort(sorted, new Comparator<WorkReportLine>() {
@@ -291,6 +302,7 @@ public class WorkReportQueryController extends GenericForwardComposer {
     	for(WorkReportLine wrl : sorted){
     		createRow(sheet.createRow(index++), wrl);
     	}
+    	return ++index;
     }
     
     private void createRow(Row r, WorkReportLine data){
