@@ -255,11 +255,11 @@ public class WorkReportQueryController extends GenericForwardComposer {
 		File fTmp = new File("/var/libreplan/" + uuid);
         InputStream tsFinal = new FileInputStream(fTmp);
         Filedownload.save(tsFinal, new MimetypesFileTypeMap().getContentType(TIME_SHEET_NAME), TIME_SHEET_NAME);
-        tsFinal.close();
-        fTmp.delete();
-
-        
+        //tsFinal.close();
+        //fTmp.delete();
     }
+    
+    
 
     
     private String getValueOrDefault(String value, String def){
@@ -522,4 +522,32 @@ public class WorkReportQueryController extends GenericForwardComposer {
 
     }
 
+    
+//    public static void main(String[] args) throws Exception{
+//    	System.out.println("Start");
+//    	Workbook wb = new XSSFWorkbook("C:\\testData\\TimeSheet");
+//    	Sheet sheet = wb.getSheetAt(0);
+//    	Row r = sheet.createRow(15);
+//    	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
+//    	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
+//    	r = sheet.createRow(16);
+//    	r.createCell(1).setCellValue("Filip Morvay");
+//    	r.createCell(3).setCellValue("Peter Kováč");
+//    	
+//    	String uuid = UUID.randomUUID().toString();
+//    	
+//		FileOutputStream fos = new FileOutputStream("C:\\testData\\" + uuid);
+//		wb.write(fos);
+//		wb.close();
+//		fos.close();
+//		File fTmp = new File("C:\\testData\\" + uuid);
+//        InputStream tsFinal = new FileInputStream(fTmp);
+//        byte[] b = new byte[1024];
+//        tsFinal.read(b);
+//        
+//        tsFinal.close();
+//        fTmp.delete();
+//        System.out.println("Stop");
+//    }
+    
 }
