@@ -557,37 +557,37 @@ public class WorkReportQueryController extends GenericForwardComposer {
     }
 
     
-    public static void main(String[] args) throws Exception{
-    	System.out.println("Start");
-    	Workbook wb = new XSSFWorkbook("C:\\testData\\TimeSheet.xlsx");
-    	Sheet sheet = wb.getSheetAt(0);
-    	Row r = sheet.createRow(15);
-    	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
-    	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
-    	r = sheet.createRow(16);
-    	r.createCell(1).setCellValue("Filip Morvay");
-    	r.createCell(3).setCellValue("Peter Kováč");
-    	r.createCell(4).setCellValue(81);
-    	r.getCell(4).setCellType(Cell.CELL_TYPE_NUMERIC);
-    	CellStyle cs = wb.createCellStyle();
-    	
-    	cs.setBorderBottom(BorderFormatting.BORDER_DASHED);
-    	r.getCell(4).setCellStyle(cs);
-    	
-    	String uuid = UUID.randomUUID().toString();
-    	
-		FileOutputStream fos = new FileOutputStream("C:\\testData\\" + uuid);
-		wb.write(fos);
-		wb.close();
-		fos.close();
-		File fTmp = new File("C:\\testData\\" + uuid);
-        InputStream tsFinal = new FileInputStream(fTmp);
-        byte[] b = new byte[1024];
-        tsFinal.read(b);
-        
-        tsFinal.close();
-        fTmp.delete();
-        System.out.println("Stop");
-    }
+//    public static void main(String[] args) throws Exception{
+//    	System.out.println("Start");
+//    	Workbook wb = new XSSFWorkbook("C:\\testData\\TimeSheet.xlsx");
+//    	Sheet sheet = wb.getSheetAt(0);
+//    	Row r = sheet.createRow(15);
+//    	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
+//    	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
+//    	r = sheet.createRow(16);
+//    	r.createCell(1).setCellValue("Filip Morvay");
+//    	r.createCell(3).setCellValue("Peter Kováč");
+//    	r.createCell(4).setCellValue(81);
+//    	r.getCell(4).setCellType(Cell.CELL_TYPE_NUMERIC);
+//    	CellStyle cs = wb.createCellStyle();
+//    	
+//    	cs.setBorderBottom(BorderFormatting.BORDER_DASHED);
+//    	r.getCell(4).setCellStyle(cs);
+//    	
+//    	String uuid = UUID.randomUUID().toString();
+//    	
+//		FileOutputStream fos = new FileOutputStream("C:\\testData\\" + uuid);
+//		wb.write(fos);
+//		wb.close();
+//		fos.close();
+//		File fTmp = new File("C:\\testData\\" + uuid);
+//        InputStream tsFinal = new FileInputStream(fTmp);
+//        byte[] b = new byte[1024];
+//        tsFinal.read(b);
+//        
+//        tsFinal.close();
+//        fTmp.delete();
+//        System.out.println("Stop");
+//    }
     
 }

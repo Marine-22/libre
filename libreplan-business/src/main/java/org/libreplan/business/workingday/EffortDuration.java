@@ -421,7 +421,7 @@ public class EffortDuration implements Comparable<EffortDuration> {
     public float getFormattedValue(){
     	EnumMap<Granularity, Integer> byGranularity = this.atNearestMinute().decompose();
     	float hours = (float)byGranularity.get(Granularity.HOURS);
-    	hours += byGranularity.get(Granularity.MINUTES)/60;
+    	hours += (float)((float)byGranularity.get(Granularity.MINUTES)/(float)60);
     	BigDecimal bd = new BigDecimal(Float.toString(hours));
     	bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP); // 2 desatinne miesta
         return bd.floatValue();
