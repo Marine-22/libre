@@ -43,8 +43,10 @@ import java.util.UUID;
 import javax.activation.MimetypesFileTypeMap;
 
 import org.apache.commons.logging.LogFactory;
+import org.apache.poi.ss.usermodel.BorderFormatting;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -240,8 +242,23 @@ public class WorkReportQueryController extends GenericForwardComposer {
     	
     	Sheet sheet = wb.getSheetAt(0);
     	fillFilter(sheet, selectedOrder);
-    	int row = fillData(sheet);
-    	Row r = sheet.createRow(row++);
+    	int row = fillData(sheet, wb);
+    	Row r = sheet.createRow(row++); // dalsi riadok po datach - pridam sumu
+    	CellStyle cs = wb.createCellStyle();
+    	cs.setBorderTop(BorderFormatting.BORDER_THICK);
+    	Font font = wb.createFont();
+		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+		cs.setFont(font);
+    	r.createCell(0).setCellValue("Spolu"); r.getCell(0).setCellStyle(cs);
+    	r.createCell(1); r.getCell(1).setCellStyle(cs);
+    	r.createCell(2); r.getCell(2).setCellStyle(cs);
+    	r.createCell(3); r.getCell(3).setCellStyle(cs);
+    	r.createCell(4); r.getCell(4).setCellStyle(cs); r.getCell(4).setCellType(Cell.CELL_TYPE_FORMULA);r.getCell(4).setCellFormula("SUM(E11:E"+(row-1)+")");
+    	r.createCell(5); r.getCell(5).setCellStyle(cs);
+    	// Koniec pridavania sumy
+    	row+=2;
+    	r = sheet.createRow(row++);
+    	
     	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
     	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
     	r = sheet.createRow(row);
@@ -293,7 +310,7 @@ public class WorkReportQueryController extends GenericForwardComposer {
     	sheet.getRow(5).getCell(5).setCellValue(getValueOrDefault(finishDate, "All"));
     }
     
-    private int fillData(Sheet sheet){
+    private int fillData(Sheet sheet, Workbook wb){
     	int index = 10;
     	List<WorkReportLine> sorted = new ArrayList<WorkReportLine>(filterWorkReportLines);
     	Collections.sort(sorted, new Comparator<WorkReportLine>() {
@@ -303,19 +320,33 @@ public class WorkReportQueryController extends GenericForwardComposer {
     		}
 		});
     	for(WorkReportLine wrl : sorted){
-    		createRow(sheet.createRow(index++), wrl);
+    		createRow(sheet.createRow(index++), wrl, wb);
     	}
-    	return ++index;
+    	return index;
     }
     
-    private void createRow(Row r, WorkReportLine data){
+    private void createRow(Row r, WorkReportLine data, Workbook wb){
     	SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+    	CellStyle cs = wb.createCellStyle();
+    	cs.setBorderBottom(BorderFormatting.BORDER_DASHED);
     	r.createCell(0).setCellValue(sdf.format(data.getDate()));
+    	r.getCell(0).setCellStyle(cs);
+    	
     	r.createCell(1).setCellValue(data.getResource().getShortDescription());
+    	r.getCell(1).setCellStyle(cs);
+    	
     	r.createCell(2).setCellValue(data.getOrderElement().getOrder().getName());
+    	r.getCell(2).setCellStyle(cs);
+    	
     	r.createCell(3).setCellValue(data.getOrderElement().getName());
-    	r.createCell(4).setCellValue(data.getEffort().toFormattedString());
+    	r.getCell(3).setCellStyle(cs);
+    	
+    	r.createCell(4).setCellValue(data.getEffort().getFormattedValue());
+    	r.getCell(4).setCellType(Cell.CELL_TYPE_NUMERIC);
+    	r.getCell(4).setCellStyle(cs);
+    	
     	r.createCell(5).setCellValue(data.getNote());
+    	r.getCell(5).setCellStyle(cs);
     }
 
     private void updateSummary() {
@@ -526,31 +557,37 @@ public class WorkReportQueryController extends GenericForwardComposer {
     }
 
     
-//    public static void main(String[] args) throws Exception{
-//    	System.out.println("Start");
-//    	Workbook wb = new XSSFWorkbook("C:\\testData\\TimeSheet");
-//    	Sheet sheet = wb.getSheetAt(0);
-//    	Row r = sheet.createRow(15);
-//    	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
-//    	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
-//    	r = sheet.createRow(16);
-//    	r.createCell(1).setCellValue("Filip Morvay");
-//    	r.createCell(3).setCellValue("Peter Kováč");
-//    	
-//    	String uuid = UUID.randomUUID().toString();
-//    	
-//		FileOutputStream fos = new FileOutputStream("C:\\testData\\" + uuid);
-//		wb.write(fos);
-//		wb.close();
-//		fos.close();
-//		File fTmp = new File("C:\\testData\\" + uuid);
-//        InputStream tsFinal = new FileInputStream(fTmp);
-//        byte[] b = new byte[1024];
-//        tsFinal.read(b);
-//        
-//        tsFinal.close();
-//        fTmp.delete();
-//        System.out.println("Stop");
-//    }
+    public static void main(String[] args) throws Exception{
+    	System.out.println("Start");
+    	Workbook wb = new XSSFWorkbook("C:\\testData\\TimeSheet.xlsx");
+    	Sheet sheet = wb.getSheetAt(0);
+    	Row r = sheet.createRow(15);
+    	r.createCell(1).setCellValue("Pracovný výkaz vyplnil:");
+    	r.createCell(3).setCellValue("Pracovný výkaz prevzal:");
+    	r = sheet.createRow(16);
+    	r.createCell(1).setCellValue("Filip Morvay");
+    	r.createCell(3).setCellValue("Peter Kováč");
+    	r.createCell(4).setCellValue(81);
+    	r.getCell(4).setCellType(Cell.CELL_TYPE_NUMERIC);
+    	CellStyle cs = wb.createCellStyle();
+    	
+    	cs.setBorderBottom(BorderFormatting.BORDER_DASHED);
+    	r.getCell(4).setCellStyle(cs);
+    	
+    	String uuid = UUID.randomUUID().toString();
+    	
+		FileOutputStream fos = new FileOutputStream("C:\\testData\\" + uuid);
+		wb.write(fos);
+		wb.close();
+		fos.close();
+		File fTmp = new File("C:\\testData\\" + uuid);
+        InputStream tsFinal = new FileInputStream(fTmp);
+        byte[] b = new byte[1024];
+        tsFinal.read(b);
+        
+        tsFinal.close();
+        fTmp.delete();
+        System.out.println("Stop");
+    }
     
 }
